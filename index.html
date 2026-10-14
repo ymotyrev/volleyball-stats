@@ -9,7 +9,6 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Волейбол">
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23f5c518'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle' fill='%23000'%3E🏐%3C/text%3E%3C/svg%3E">
-<link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0f1923">
 
 <style>
@@ -27,6 +26,9 @@
 
   .header { text-align: center; padding: 15px 10px; background: linear-gradient(135deg, #1a2733 0%, #0f1923 100%); border-bottom: 1px solid #2a3a4a; }
   .header h1 { font-size: 1.3rem; font-weight: 700; }
+  .sync-status { font-size: 0.75rem; margin-top: 5px; }
+  .sync-status.online { color: var(--accent); }
+  .sync-status.offline { color: var(--danger); }
 
   .scoreboard { display: flex; align-items: center; justify-content: center; gap: 0; padding: 15px 10px; background: linear-gradient(180deg, #1a2733 0%, var(--bg) 100%); }
   .team-score { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 110px; }
@@ -178,55 +180,14 @@
     margin-bottom: 20px;
     text-align: center;
   }
-  .backup-section h3 {
-    font-size: 1.1rem;
-    margin-bottom: 10px;
-    color: var(--accent);
-  }
-  .backup-section p {
-    font-size: 0.85rem;
-    color: var(--text-dim);
-    margin-bottom: 15px;
-    line-height: 1.5;
-  }
-  .backup-buttons {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-  .backup-buttons button {
-    padding: 12px 20px;
-    border: none;
-    border-radius: var(--radius);
-    font-weight: 700;
-    cursor: pointer;
-    font-size: 0.9rem;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .btn-backup {
-    background: linear-gradient(135deg, #27ae60, #229954);
-    color: #fff;
-  }
-  .btn-restore {
-    background: linear-gradient(135deg, #3498db, #2980b9);
-    color: #fff;
-  }
-  .file-input-wrapper {
-    position: relative;
-    display: inline-block;
-  }
-  .file-input-wrapper input[type="file"] {
-    position: absolute;
-    left: 0;
-    top: 0;
-    opacity: 0;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-  }
+  .backup-section h3 { font-size: 1.1rem; margin-bottom: 10px; color: var(--accent); }
+  .backup-section p { font-size: 0.85rem; color: var(--text-dim); margin-bottom: 15px; line-height: 1.5; }
+  .backup-buttons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .backup-buttons button { padding: 12px 20px; border: none; border-radius: var(--radius); font-weight: 700; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; }
+  .btn-backup { background: linear-gradient(135deg, #27ae60, #229954); color: #fff; }
+  .btn-restore { background: linear-gradient(135deg, #3498db, #2980b9); color: #fff; }
+  .file-input-wrapper { position: relative; display: inline-block; }
+  .file-input-wrapper input[type="file"] { position: absolute; left: 0; top: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer; }
 
   .match-history-item { background: var(--card); border: 1px solid #2a3a4a; border-radius: var(--radius); padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
   .mhi-info { flex: 1; }
@@ -360,6 +321,7 @@
 
 <div class="header">
   <h1>🏐 Волейбол: Статистика и Аналитика</h1>
+  <div class="sync-status" id="sync-status">🔄 Подключение...</div>
 </div>
 
 <div class="scoreboard">
@@ -491,7 +453,30 @@
 <div class="toast" id="toast"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script>
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { getFirestore, doc, setDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyA7zrZSewhSucu2DjlTQxbdDt5EtD9-BeU",
+  authDomain: "volleyball-stats-c3315.firebaseapp.com",
+  projectId: "volleyball-stats-c3315",
+  storageBucket: "volleyball-stats-c3315.firebasestorage.app",
+  messagingSenderId: "228571910471",
+  appId: "1:228571910471:web:76c57127770e39eb01fc62"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
 const defaultState = {
   score: { yellow: 0, blue: 0 },
   roster: [],
@@ -504,6 +489,7 @@ const defaultState = {
 let state = JSON.parse(JSON.stringify(defaultState));
 let currentCanvas = null;
 let currentFilename = '';
+let isSyncing = false;
 
 const STAT_DEFS = [
   { key: 'points', label: 'Очки', icon: '⭐' },
@@ -864,7 +850,6 @@ function renderCompare() {
   c.innerHTML = h;
 }
 
-// ===== BACKUP FUNCTIONS =====
 function exportBackup() {
   const backupData = {
     version: '1.0',
@@ -919,7 +904,6 @@ function importBackup(event) {
       save();
       toast('Данные восстановлены!');
       
-      // Перезагрузить страницу для полного обновления
       setTimeout(() => location.reload(), 1000);
       
     } catch (err) {
@@ -929,7 +913,7 @@ function importBackup(event) {
   };
   
   reader.readAsText(file);
-  event.target.value = ''; // Сбросить input
+  event.target.value = '';
 }
 
 function renderReports() {
@@ -1354,18 +1338,30 @@ function exportData() {
   navigator.clipboard.writeText(t).then(() => toast('Скопировано!'));
 }
 
-function save() { try { localStorage.setItem('vb_stats_v4', JSON.stringify(state)); } catch(e) {} }
-function load() {
-  try {
-    const d = JSON.parse(localStorage.getItem('vb_stats_v4'));
-    if (d) {
-      state = d;
-      if (!state.matchHistory) state.matchHistory = [];
-      document.getElementById('score-yellow').textContent = state.score.yellow;
-      document.getElementById('score-blue').textContent = state.score.blue;
-      renderRoster(); updateSelects(); renderPlayers('yellow'); renderPlayers('blue');
-    }
-  } catch(e) {}
+function save() {
+  if (isSyncing) return;
+  isSyncing = true;
+  setDoc(doc(db, "app", "state"), state)
+    .then(() => {
+      isSyncing = false;
+      updateSyncStatus('online');
+    })
+    .catch(err => {
+      console.error('Ошибка сохранения:', err);
+      isSyncing = false;
+      updateSyncStatus('offline');
+    });
+}
+
+function updateSyncStatus(status) {
+  const el = document.getElementById('sync-status');
+  if (status === 'online') {
+    el.textContent = '✅ Синхронизировано';
+    el.className = 'sync-status online';
+  } else {
+    el.textContent = '⚠️ Офлайн';
+    el.className = 'sync-status offline';
+  }
 }
 
 function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
@@ -1377,13 +1373,49 @@ function toast(m) {
 document.getElementById('roster-name').addEventListener('keydown', e => { if (e.key === 'Enter') addToRoster(); });
 document.getElementById('roster-num').addEventListener('keydown', e => { if (e.key === 'Enter') addToRoster(); });
 
-load();
+// Подписка на изменения в Firebase
+onSnapshot(doc(db, "app", "state"), (docSnap) => {
+  if (docSnap.exists()) {
+    state = docSnap.data();
+    if (!state.matchHistory) state.matchHistory = [];
+    document.getElementById('score-yellow').textContent = state.score.yellow;
+    document.getElementById('score-blue').textContent = state.score.blue;
+    renderRoster();
+    updateSelects();
+    renderPlayers('yellow');
+    renderPlayers('blue');
+    updateSyncStatus('online');
+  } else {
+    updateSyncStatus('offline');
+  }
+}, (error) => {
+  console.error('Ошибка подписки:', error);
+  updateSyncStatus('offline');
+});
 
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js').catch(() => {});
-  });
-}
+// Делаем функции доступными глобально
+window.addToRoster = addToRoster;
+window.removeFromRoster = removeFromRoster;
+window.addFromRoster = addFromRoster;
+window.removePlayer = removePlayer;
+window.selectPlayer = selectPlayer;
+window.recordStat = recordStat;
+window.changeScore = changeScore;
+window.resetScore = resetScore;
+window.resetMatch = resetMatch;
+window.openFinishModal = openFinishModal;
+window.closeFinishModal = closeFinishModal;
+window.finishMatch = finishMatch;
+window.deleteMatch = deleteMatch;
+window.switchTab = switchTab;
+window.exportBackup = exportBackup;
+window.importBackup = importBackup;
+window.exportDetailed = exportDetailed;
+window.exportBrief = exportBrief;
+window.closePreview = closePreview;
+window.saveImage = saveImage;
+window.shareImage = shareImage;
+window.exportData = exportData;
 </script>
 </body>
 </html>
