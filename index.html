@@ -6,6 +6,7 @@
 <title>🏐 Волейбол: Статистика</title>
 
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Волейбол">
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%23f5c518'/%3E%3Ctext x='50' y='70' font-size='60' text-anchor='middle' fill='%23000'%3E🏐%3C/text%3E%3C/svg%3E">
@@ -31,15 +32,15 @@
   .sync-status.offline { color: var(--danger); }
 
   .scoreboard { display: flex; align-items: center; justify-content: center; gap: 0; padding: 15px 10px; background: linear-gradient(180deg, #1a2733 0%, var(--bg) 100%); }
-  .team-score { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 110px; }
+  .team-score { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 140px; }
   .team-score .label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; }
   .team-score.yellow .label { color: var(--yellow); }
   .team-score.blue .label { color: var(--blue); }
-  .score-num { font-size: 5.8rem; font-weight: 900; line-height: 1; font-variant-numeric: tabular-nums; }
+  .score-num { font-size: 4.8rem; font-weight: 900; line-height: 1; font-variant-numeric: tabular-nums; }
   .team-score.yellow .score-num { color: var(--yellow); }
   .team-score.blue .score-num { color: var(--blue); }
   .score-btns { display: flex; gap: 8px; }
- .score-btns button { width: 40px; height: 40px; border: none; border-radius: 50%; font-size: 1.95rem; font-weight: 700; cursor: pointer; color: #fff; }
+  .score-btns button { width: 60px; height: 60px; border: none; border-radius: 50%; font-size: 1.95rem; font-weight: 700; cursor: pointer; color: #fff; }
   .score-btns button:active { transform: scale(0.9); }
   .team-score.yellow .score-btns button { background: var(--yellow-dark); }
   .team-score.blue .score-btns button { background: var(--blue-dark); }
@@ -82,16 +83,35 @@
   .blue-panel .add-player-row button { background: var(--blue); color: #fff; }
 
   .players-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-bottom: 15px; }
-  .player-card { background: var(--card); border: 2px solid transparent; border-radius: var(--radius); padding: 12px 8px; cursor: pointer; text-align: center; position: relative; }
+  .player-card { 
+    background: var(--card); 
+    border: 2px solid transparent; 
+    border-radius: var(--radius); 
+    padding: 12px 8px; 
+    cursor: pointer; 
+    text-align: center; 
+    position: relative; 
+    touch-action: manipulation;
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
   .player-card:hover { background: var(--card-hover); }
-  .player-card.selected-yellow { border-color: var(--yellow); }
-  .player-card.selected-blue { border-color: var(--blue); }
+  .player-card:active { transform: scale(0.95); }
+  .player-card.selected-yellow { 
+    border-color: var(--yellow); 
+    box-shadow: 0 0 20px rgba(245,197,24,0.4);
+    background: rgba(245,197,24,0.08);
+  }
+  .player-card.selected-blue { 
+    border-color: var(--blue); 
+    box-shadow: 0 0 20px rgba(41,128,185,0.4);
+    background: rgba(41,128,185,0.08);
+  }
   .player-card .p-number { font-size: 1.5rem; font-weight: 900; line-height: 1; }
   .yellow-panel .player-card .p-number { color: var(--yellow); }
   .blue-panel .player-card .p-number { color: var(--blue); }
   .player-card .p-name { font-size: 0.85rem; margin-top: 4px; color: var(--text-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .player-card .p-pts { font-size: 0.75rem; color: var(--accent); margin-top: 4px; font-weight: 600; }
-  .player-card .remove-btn { position: absolute; top: 4px; right: 6px; background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 0.9rem; opacity: 0; }
+  .player-card .remove-btn { position: absolute; top: 4px; right: 6px; background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 0.9rem; opacity: 0; transition: opacity 0.2s; }
   .player-card:hover .remove-btn { opacity: 1; }
 
   .action-panel { background: var(--card); border-radius: var(--radius); padding: 15px; display: none; border: 1px solid #2a3a4a; }
@@ -99,12 +119,15 @@
   .action-panel h3 { margin-bottom: 12px; font-size: 1rem; }
   .action-panel h3 .ap-name { color: var(--accent); }
 
-  .action-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; }
+  .action-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .action-pair { display: flex; gap: 4px; background: rgba(255,255,255,0.03); border: 1px solid #3a4a5a; border-radius: var(--radius); padding: 4px; }
-  .action-pair .action-btn { flex: 1; padding: 10px 2px; border: none; border-radius: 8px; font-size: 0.8rem; font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 2px; color: var(--text); background: transparent; }
-  .action-pair .action-btn.plus { background: rgba(0, 212, 170, 0.08); }
-  .action-pair .action-btn.minus { flex: 0 0 38px; background: rgba(231, 76, 60, 0.08); color: var(--danger); font-size: 1.2rem; font-weight: 700; }
-  .action-pair .action-btn .icon { font-size: 1.2rem; line-height: 1; }
+  .action-pair .action-btn { flex: 1; padding: 14px 4px; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text); background: transparent; }
+  .action-pair .action-btn.plus { background: rgba(0, 212, 170, 0.12); }
+  .action-pair .action-btn.plus:active { background: rgba(0, 212, 170, 0.35); }
+  .action-pair .action-btn.minus { flex: 0 0 48px; background: rgba(231, 76, 60, 0.12); color: var(--danger); font-size: 1.4rem; font-weight: 700; }
+  .action-pair .action-btn.minus:active { background: rgba(231, 76, 60, 0.35); }
+  .action-pair .action-btn .icon { font-size: 1.5rem; line-height: 1; }
+  .action-pair .action-btn .auto-badge { font-size: 0.6rem; color: var(--gold); font-weight: 700; margin-top: 2px; }
 
   .player-detail-stats { margin-top: 15px; padding-top: 12px; border-top: 1px solid #2a3a4a; display: grid; grid-template-columns: repeat(auto-fill, minmax(80px, 1fr)); gap: 6px; }
   .stat-chip { background: rgba(255,255,255,0.05); border-radius: 8px; padding: 8px 4px; text-align: center; }
@@ -172,14 +195,7 @@
   .btn-brief { background: linear-gradient(135deg, #f39c12, #e67e22); color: #fff; }
   .reports-buttons button:disabled { opacity: 0.4; cursor: not-allowed; }
 
-  .backup-section {
-    background: linear-gradient(135deg, rgba(0,212,170,0.1) 0%, rgba(41,128,185,0.1) 100%);
-    border: 1px solid #3a4a5a;
-    border-radius: var(--radius);
-    padding: 20px;
-    margin-bottom: 20px;
-    text-align: center;
-  }
+  .backup-section { background: linear-gradient(135deg, rgba(0,212,170,0.1) 0%, rgba(41,128,185,0.1) 100%); border: 1px solid #3a4a5a; border-radius: var(--radius); padding: 20px; margin-bottom: 20px; text-align: center; }
   .backup-section h3 { font-size: 1.1rem; margin-bottom: 10px; color: var(--accent); }
   .backup-section p { font-size: 0.85rem; color: var(--text-dim); margin-bottom: 15px; line-height: 1.5; }
   .backup-buttons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
@@ -308,7 +324,7 @@
   .empty-msg { text-align: center; color: var(--text-dim); padding: 30px 20px; font-size: 0.9rem; }
 
   @media (max-width: 500px) {
-    .score-num { font-size: 5.2rem; }
+    .score-num { font-size: 4.2rem; }
     .action-grid { grid-template-columns: repeat(2, 1fr); }
     .tab-btn { padding: 7px 8px; font-size: 0.7rem; }
     .mvp-podium { gap: 4px; }
@@ -457,11 +473,6 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { getFirestore, doc, setDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
-
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyA7zrZSewhSucu2DjlTQxbdDt5EtD9-BeU",
   authDomain: "volleyball-stats-c3315.firebaseapp.com",
@@ -471,9 +482,7 @@ const firebaseConfig = {
   appId: "1:228571910471:web:76c57127770e39eb01fc62"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
 const db = getFirestore(app);
 
 const defaultState = {
@@ -490,6 +499,7 @@ let currentCanvas = null;
 let currentFilename = '';
 let isSyncing = false;
 
+// Все метрики для таблиц и отчётов (оставляем все для полной статистики)
 const STAT_DEFS = [
   { key: 'points', label: 'Очки', icon: '⭐' },
   { key: 'aces', label: 'Эйсы', icon: '🎯' },
@@ -497,8 +507,25 @@ const STAT_DEFS = [
   { key: 'receptions', label: 'Приём', icon: '🤲' },
   { key: 'outs', label: 'Ауты', icon: '📤' },
   { key: 'attacks', label: 'Атаки', icon: '💥' },
-  { key: 'serviceErrors', label: 'Ошиб. подачи', icon: '❌' },
+  { key: 'serviceErrors', label: 'Ошибки', icon: '❌' },
   { key: 'assists', label: 'Передачи', icon: '🎯' },
+];
+
+// ============================================
+// КНОПКИ ДЕЙСТВИЙ (активные — только 4)
+// Чтобы вернуть кнопку, раскомментируйте её
+// ============================================
+const ACTION_BUTTONS = [
+  { key: 'attacks', label: 'Атака', icon: '💥', autoPoint: true },
+  { key: 'aces', label: 'Эйс', icon: '🎯', autoPoint: true },
+  { key: 'blocks', label: 'Блок', icon: '🧱', autoPoint: true },
+  { key: 'serviceErrors', label: 'Ошибка', icon: '❌', autoPoint: false },
+  
+  // Раскомментируйте, чтобы вернуть кнопку:
+  // { key: 'points', label: 'Очки', icon: '⭐', autoPoint: false },
+  // { key: 'receptions', label: 'Приём', icon: '🤲', autoPoint: false },
+  // { key: 'outs', label: 'Ауты', icon: '📤', autoPoint: false },
+  // { key: 'assists', label: 'Передачи', icon: '🎯', autoPoint: false },
 ];
 
 const MVP_WEIGHTS = { points: 1.0, aces: 2.0, blocks: 1.5, attacks: 1.2, assists: 0.8, receptions: 0.5, outs: -1.0, serviceErrors: -1.0 };
@@ -595,9 +622,18 @@ function removePlayer(team, idx) {
   updateSelects(); renderPlayers(team); save();
 }
 
+// ОДИНАРНЫЙ ТАП — выбор игрока
 function selectPlayer(team, idx) {
-  if (state.selected[team] === idx) { state.selected[team] = null; hideActions(team); }
-  else { state.selected[team] = idx; showActions(team, idx); }
+  // Вибрация на телефоне для тактильной обратной связи
+  if (navigator.vibrate) navigator.vibrate(30);
+  
+  if (state.selected[team] === idx) { 
+    state.selected[team] = null; 
+    hideActions(team); 
+  } else { 
+    state.selected[team] = idx; 
+    showActions(team, idx); 
+  }
   renderPlayers(team);
 }
 
@@ -620,22 +656,40 @@ function showActions(team, idx) {
   const p = state.teams[team].players[idx];
   document.getElementById('actions-' + team).classList.add('visible');
   document.getElementById('ap-name-' + team).textContent = `#${p.number||'—'} ${p.name}`;
-  document.getElementById('action-grid-' + team).innerHTML = STAT_DEFS.map(s => `
+  
+  // Используем ACTION_BUTTONS (только 4 активные кнопки)
+  document.getElementById('action-grid-' + team).innerHTML = ACTION_BUTTONS.map(s => `
     <div class="action-pair">
-      <button class="action-btn plus" onclick="recordStat('${team}',${idx},'${s.key}',1)">
-        <span class="icon">${s.icon}</span><span>${s.label}</span>
+      <button class="action-btn plus" onclick="recordAction('${team}',${idx},'${s.key}',1)">
+        <span class="icon">${s.icon}</span>
+        <span>${s.label}</span>
+        ${s.autoPoint ? '<span class="auto-badge">+1 очко</span>' : ''}
       </button>
-      <button class="action-btn minus" onclick="recordStat('${team}',${idx},'${s.key}',-1)">−</button>
+      <button class="action-btn minus" onclick="recordAction('${team}',${idx},'${s.key}',-1)">−</button>
     </div>`).join('');
   renderDetailStats(team, p);
 }
 
 function hideActions(t) { document.getElementById('actions-' + t).classList.remove('visible'); }
 
-function recordStat(team, idx, key, delta) {
-  const p = state.teams[team].players[idx];
-  p.stats[key] = Math.max(0, p.stats[key] + delta);
-  renderDetailStats(team, p); renderPlayers(team); save();
+// ============================================
+// НОВАЯ ФУНКЦИЯ: запись действия с авто-очком
+// ============================================
+function recordAction(team, idx, key, delta) {
+  const player = state.teams[team].players[idx];
+  
+  // Уменьшаем/увеличиваем основное действие
+  player.stats[key] = Math.max(0, player.stats[key] + delta);
+  
+  // Автоматическое начисление очка для атаки/эйса/блока
+  const actionDef = ACTION_BUTTONS.find(a => a.key === key);
+  if (actionDef && actionDef.autoPoint) {
+    player.stats.points = Math.max(0, player.stats.points + delta);
+  }
+  
+  renderDetailStats(team, player);
+  renderPlayers(team);
+  save();
 }
 
 function renderDetailStats(team, p) {
@@ -825,7 +879,7 @@ function renderCompare() {
   const metrics = [
     { k: 'points', l: '⭐ Очки' }, { k: 'aces', l: '🎯 Эйсы' }, { k: 'blocks', l: '🧱 Блоки' },
     { k: 'attacks', l: '💥 Атаки' }, { k: 'assists', l: '🎯 Передачи' }, { k: 'receptions', l: '🤲 Приём' },
-    { k: 'outs', l: '📤 Ауты', neg: true }, { k: 'serviceErrors', l: '❌ Ошиб. подачи', neg: true }
+    { k: 'outs', l: '📤 Ауты', neg: true }, { k: 'serviceErrors', l: '❌ Ошибки', neg: true }
   ];
   metrics.forEach(m => {
     const yv = yt[m.k]||0, bv = bt[m.k]||0, tot = yv+bv;
@@ -1372,7 +1426,6 @@ function toast(m) {
 document.getElementById('roster-name').addEventListener('keydown', e => { if (e.key === 'Enter') addToRoster(); });
 document.getElementById('roster-num').addEventListener('keydown', e => { if (e.key === 'Enter') addToRoster(); });
 
-// Подписка на изменения в Firebase
 onSnapshot(doc(db, "app", "state"), (docSnap) => {
   if (docSnap.exists()) {
     state = docSnap.data();
@@ -1392,13 +1445,12 @@ onSnapshot(doc(db, "app", "state"), (docSnap) => {
   updateSyncStatus('offline');
 });
 
-// Делаем функции доступными глобально
 window.addToRoster = addToRoster;
 window.removeFromRoster = removeFromRoster;
 window.addFromRoster = addFromRoster;
 window.removePlayer = removePlayer;
 window.selectPlayer = selectPlayer;
-window.recordStat = recordStat;
+window.recordAction = recordAction;
 window.changeScore = changeScore;
 window.resetScore = resetScore;
 window.resetMatch = resetMatch;
