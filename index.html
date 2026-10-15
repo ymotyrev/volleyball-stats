@@ -655,7 +655,7 @@ function renderPlayers(team) {
   if (ps.length === 0) { g.innerHTML = '<div class="empty-msg">Выберите игроков из базы</div>'; return; }
   g.innerHTML = ps.map((p, i) => {
     const sel = state.selected[team] === i ? `selected-${team}` : '';
-    return `<div class="player-card ${sel}" onclick="selectPlayer('${team}',${i})">
+    return `<div class="player-card ${sel}" onpointerdown="selectPlayer('${team}',${i})">
       <button class="remove-btn" onclick="event.stopPropagation();removePlayer('${team}',${i})">✕</button>
       <div class="p-number">${p.number || '—'}</div>
       <div class="p-name">${esc(p.name)}</div>
