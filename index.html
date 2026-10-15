@@ -499,7 +499,9 @@ let currentCanvas = null;
 let currentFilename = '';
 let isSyncing = false;
 
-// Все метрики для таблиц и отчётов (оставляем все для полной статистики)
+// ============================================
+// ВСЕ МЕТРИКИ (для таблиц, отчётов и расчётов)
+// ============================================
 const STAT_DEFS = [
   { key: 'points', label: 'Очки', icon: '⭐' },
   { key: 'aces', label: 'Эйсы', icon: '🎯' },
@@ -512,19 +514,31 @@ const STAT_DEFS = [
 ];
 
 // ============================================
-// КНОПКИ ДЕЙСТВИЙ (активные — только 4)
-// Чтобы вернуть кнопку, раскомментируйте её
+// МЕТРИКИ ДЛЯ ОТОБРАЖЕНИЯ В ПАНЕЛИ ИГРОКА
+// (только те, которые реально используются кнопками)
+// ============================================
+const DISPLAY_STATS = [
+  { key: 'points', label: 'Очки', icon: '⭐' },
+  { key: 'attacks', label: 'Атаки', icon: '💥' },
+  { key: 'aces', label: 'Эйсы', icon: '🎯' },
+  { key: 'blocks', label: 'Блоки', icon: '🧱' },
+  { key: 'outs', label: 'Ауты', icon: '📤' },
+  { key: 'serviceErrors', label: 'Ошибки', icon: '❌' },
+];
+
+// ============================================
+// КНОПКИ ДЕЙСТВИЙ (активные — 5 кнопок)
 // ============================================
 const ACTION_BUTTONS = [
   { key: 'attacks', label: 'Атака', icon: '💥', autoPoint: true },
   { key: 'aces', label: 'Эйс', icon: '🎯', autoPoint: true },
   { key: 'blocks', label: 'Блок', icon: '🧱', autoPoint: true },
+  { key: 'outs', label: 'Ауты', icon: '📤', autoPoint: false },
   { key: 'serviceErrors', label: 'Ошибка', icon: '❌', autoPoint: false },
   
   // Раскомментируйте, чтобы вернуть кнопку:
   // { key: 'points', label: 'Очки', icon: '⭐', autoPoint: false },
   // { key: 'receptions', label: 'Приём', icon: '🤲', autoPoint: false },
-  // { key: 'outs', label: 'Ауты', icon: '📤', autoPoint: false },
   // { key: 'assists', label: 'Передачи', icon: '🎯', autoPoint: false },
 ];
 
@@ -622,9 +636,7 @@ function removePlayer(team, idx) {
   updateSelects(); renderPlayers(team); save();
 }
 
-// ОДИНАРНЫЙ ТАП — выбор игрока
 function selectPlayer(team, idx) {
-  // Вибрация на телефоне для тактильной обратной связи
   if (navigator.vibrate) navigator.vibrate(30);
   
   if (state.selected[team] === idx) { 
@@ -657,7 +669,6 @@ function showActions(team, idx) {
   document.getElementById('actions-' + team).classList.add('visible');
   document.getElementById('ap-name-' + team).textContent = `#${p.number||'—'} ${p.name}`;
   
-  // Используем ACTION_BUTTONS (только 4 активные кнопки)
   document.getElementById('action-grid-' + team).innerHTML = ACTION_BUTTONS.map(s => `
     <div class="action-pair">
       <button class="action-btn plus" onclick="recordAction('${team}',${idx},'${s.key}',1)">
@@ -672,16 +683,11 @@ function showActions(team, idx) {
 
 function hideActions(t) { document.getElementById('actions-' + t).classList.remove('visible'); }
 
-// ============================================
-// НОВАЯ ФУНКЦИЯ: запись действия с авто-очком
-// ============================================
 function recordAction(team, idx, key, delta) {
   const player = state.teams[team].players[idx];
   
-  // Уменьшаем/увеличиваем основное действие
   player.stats[key] = Math.max(0, player.stats[key] + delta);
   
-  // Автоматическое начисление очка для атаки/эйса/блока
   const actionDef = ACTION_BUTTONS.find(a => a.key === key);
   if (actionDef && actionDef.autoPoint) {
     player.stats.points = Math.max(0, player.stats.points + delta);
@@ -692,10 +698,13 @@ function recordAction(team, idx, key, delta) {
   save();
 }
 
+// ============================================
+// В панели игрока показываем ТОЛЬКО используемые метрики
+// ============================================
 function renderDetailStats(team, p) {
   const tt = calcTeamTotals(team);
   const e = calcPlayerEfficiency(p, tt);
-  document.getElementById('detail-stats-' + team).innerHTML = STAT_DEFS.map(s =>
+  document.getElementById('detail-stats-' + team).innerHTML = DISPLAY_STATS.map(s =>
     `<div class="stat-chip"><div class="sv">${p.stats[s.key]}</div><div class="sl">${s.label}</div></div>`
   ).join('') + `<div class="stat-chip" style="grid-column:span 2"><div class="sv" style="color:var(--gold)">${e.kr}</div><div class="sl">Коэф. результат.</div></div>`;
 }
