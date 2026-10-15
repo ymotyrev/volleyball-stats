@@ -82,6 +82,39 @@
   .yellow-panel .add-player-row button { background: var(--yellow); color: #000; }
   .blue-panel .add-player-row button { background: var(--blue); color: #fff; }
 
+  /* ===== КНОПКА ВОССТАНОВЛЕНИЯ СОСТАВА ===== */
+  .restore-lineup-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 14px 20px;
+    margin-bottom: 15px;
+    border: 2px dashed var(--accent);
+    border-radius: var(--radius);
+    background: linear-gradient(135deg, rgba(0,212,170,0.1) 0%, rgba(0,168,132,0.1) 100%);
+    color: var(--accent);
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .restore-lineup-btn:hover {
+    background: linear-gradient(135deg, rgba(0,212,170,0.2) 0%, rgba(0,168,132,0.2) 100%);
+    transform: translateY(-1px);
+  }
+  .restore-lineup-btn:active { transform: scale(0.98); }
+  .restore-lineup-btn .icon { font-size: 1.3rem; }
+  .restore-lineup-btn .info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+  .restore-lineup-btn .info .main { font-size: 0.95rem; }
+  .restore-lineup-btn .info .sub { font-size: 0.7rem; color: var(--text-dim); font-weight: 400; margin-top: 2px; }
+
   .players-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-bottom: 15px; }
   .player-card { 
     background: var(--card); 
@@ -389,6 +422,7 @@
   </div>
 
   <div class="tab-panel yellow-panel" id="panel-yellow">
+    <div id="restore-yellow-container"></div>
     <div class="add-player-row">
       <select id="select-yellow"><option value="">Выберите игрока из базы...</option></select>
       <button onclick="addFromRoster('yellow')">Добавить</button>
@@ -402,6 +436,7 @@
   </div>
 
   <div class="tab-panel blue-panel" id="panel-blue">
+    <div id="restore-blue-container"></div>
     <div class="add-player-row">
       <select id="select-blue"><option value="">Выберите игрока из базы...</option></select>
       <button onclick="addFromRoster('blue')">Добавить</button>
@@ -491,7 +526,8 @@ const defaultState = {
   teams: { yellow: { players: [] }, blue: { players: [] } },
   selected: { yellow: null, blue: null },
   nextId: 1,
-  matchHistory: []
+  matchHistory: [],
+  lastLineup: null  // ← НОВОЕ: хранение последнего состава
 };
 
 let state = JSON.parse(JSON.stringify(defaultState));
@@ -499,9 +535,6 @@ let currentCanvas = null;
 let currentFilename = '';
 let isSyncing = false;
 
-// ============================================
-// ВСЕ МЕТРИКИ (для таблиц, отчётов и расчётов)
-// ============================================
 const STAT_DEFS = [
   { key: 'points', label: 'Очки', icon: '⭐' },
   { key: 'aces', label: 'Эйсы', icon: '🎯' },
@@ -513,10 +546,6 @@ const STAT_DEFS = [
   { key: 'assists', label: 'Передачи', icon: '🎯' },
 ];
 
-// ============================================
-// МЕТРИКИ ДЛЯ ОТОБРАЖЕНИЯ В ПАНЕЛИ ИГРОКА
-// (только те, которые реально используются кнопками)
-// ============================================
 const DISPLAY_STATS = [
   { key: 'points', label: 'Очки', icon: '⭐' },
   { key: 'attacks', label: 'Атаки', icon: '💥' },
@@ -526,20 +555,12 @@ const DISPLAY_STATS = [
   { key: 'serviceErrors', label: 'Ошибки', icon: '❌' },
 ];
 
-// ============================================
-// КНОПКИ ДЕЙСТВИЙ (активные — 5 кнопок)
-// ============================================
 const ACTION_BUTTONS = [
   { key: 'attacks', label: 'Атака', icon: '💥', autoPoint: true },
   { key: 'aces', label: 'Эйс', icon: '🎯', autoPoint: true },
   { key: 'blocks', label: 'Блок', icon: '🧱', autoPoint: true },
   { key: 'outs', label: 'Ауты', icon: '📤', autoPoint: false },
   { key: 'serviceErrors', label: 'Ошибка', icon: '❌', autoPoint: false },
-  
-  // Раскомментируйте, чтобы вернуть кнопку:
-  // { key: 'points', label: 'Очки', icon: '⭐', autoPoint: false },
-  // { key: 'receptions', label: 'Приём', icon: '🤲', autoPoint: false },
-  // { key: 'assists', label: 'Передачи', icon: '🎯', autoPoint: false },
 ];
 
 const MVP_WEIGHTS = { points: 1.0, aces: 2.0, blocks: 1.5, attacks: 1.2, assists: 0.8, receptions: 0.5, outs: -1.0, serviceErrors: -1.0 };
@@ -636,7 +657,12 @@ function removePlayer(team, idx) {
   updateSelects(); renderPlayers(team); save();
 }
 
+let lastSelectTime = 0;
 function selectPlayer(team, idx) {
+  const now = Date.now();
+  if (now - lastSelectTime < 300) return;
+  lastSelectTime = now;
+  
   if (navigator.vibrate) navigator.vibrate(30);
   
   if (state.selected[team] === idx) { 
@@ -698,9 +724,6 @@ function recordAction(team, idx, key, delta) {
   save();
 }
 
-// ============================================
-// В панели игрока показываем ТОЛЬКО используемые метрики
-// ============================================
 function renderDetailStats(team, p) {
   const tt = calcTeamTotals(team);
   const e = calcPlayerEfficiency(p, tt);
@@ -731,7 +754,8 @@ function resetMatch() {
   document.getElementById('score-blue').textContent = '0';
   renderPlayers('yellow'); renderPlayers('blue');
   hideActions('yellow'); hideActions('blue');
-  updateSelects(); switchTab('yellow');
+  updateSelects(); renderRestoreButtons();
+  switchTab('yellow');
   toast('Матч сброшен'); save();
 }
 
@@ -757,6 +781,122 @@ function openFinishModal() {
 
 function closeFinishModal() {
   document.getElementById('finish-modal').classList.remove('show');
+}
+
+// ============================================
+// СОХРАНЕНИЕ ПОСЛЕДНЕГО СОСТАВА
+// ============================================
+function saveLastLineup() {
+  const yellowLineup = state.teams.yellow.players.map(p => ({
+    rosterId: p.rosterId,
+    name: p.name,
+    number: p.number
+  }));
+  const blueLineup = state.teams.blue.players.map(p => ({
+    rosterId: p.rosterId,
+    name: p.name,
+    number: p.number
+  }));
+  
+  // Сохраняем только если есть игроки
+  if (yellowLineup.length > 0 || blueLineup.length > 0) {
+    state.lastLineup = {
+      yellow: yellowLineup,
+      blue: blueLineup,
+      savedAt: new Date().toISOString()
+    };
+  }
+}
+
+// ============================================
+// ВОССТАНОВЛЕНИЕ ПОСЛЕДНЕГО СОСТАВА
+// ============================================
+function restoreLastLineup() {
+  if (!state.lastLineup) {
+    toast('Нет сохранённого состава');
+    return;
+  }
+  
+  if (state.teams.yellow.players.length > 0 || state.teams.blue.players.length > 0) {
+    if (!confirm('Восстановить последний состав? Текущие команды будут заменены.')) {
+      return;
+    }
+  }
+  
+  // Восстанавливаем жёлтую команду
+  state.teams.yellow.players = [];
+  state.lastLineup.yellow.forEach(saved => {
+    // Проверяем, есть ли игрок в базе
+    const rosterPlayer = state.roster.find(r => r.id === saved.rosterId);
+    if (rosterPlayer) {
+      state.teams.yellow.players.push({
+        rosterId: rosterPlayer.id,
+        name: rosterPlayer.name,
+        number: rosterPlayer.number,
+        stats: { points:0, aces:0, blocks:0, receptions:0, outs:0, attacks:0, serviceErrors:0, assists:0 }
+      });
+    }
+  });
+  
+  // Восстанавливаем синюю команду
+  state.teams.blue.players = [];
+  state.lastLineup.blue.forEach(saved => {
+    const rosterPlayer = state.roster.find(r => r.id === saved.rosterId);
+    if (rosterPlayer) {
+      state.teams.blue.players.push({
+        rosterId: rosterPlayer.id,
+        name: rosterPlayer.name,
+        number: rosterPlayer.number,
+        stats: { points:0, aces:0, blocks:0, receptions:0, outs:0, attacks:0, serviceErrors:0, assists:0 }
+      });
+    }
+  });
+  
+  state.selected = { yellow: null, blue: null };
+  hideActions('yellow');
+  hideActions('blue');
+  updateSelects();
+  renderPlayers('yellow');
+  renderPlayers('blue');
+  renderRestoreButtons();
+  save();
+  
+  const totalPlayers = state.teams.yellow.players.length + state.teams.blue.players.length;
+  toast(`Состав восстановлен: ${totalPlayers} игроков`);
+}
+
+// ============================================
+// ОТОБРАЖЕНИЕ КНОПКИ ВОССТАНОВЛЕНИЯ
+// ============================================
+function renderRestoreButtons() {
+  ['yellow', 'blue'].forEach(team => {
+    const container = document.getElementById(`restore-${team}-container`);
+    const hasLineup = state.lastLineup && 
+                     ((team === 'yellow' && state.lastLineup.yellow.length > 0) ||
+                      (team === 'blue' && state.lastLineup.blue.length > 0));
+    
+    // Показываем кнопку только если есть сохранённый состав И команда пуста
+    const teamEmpty = state.teams[team].players.length === 0;
+    
+    if (hasLineup && teamEmpty) {
+      const count = team === 'yellow' ? state.lastLineup.yellow.length : state.lastLineup.blue.length;
+      const teamLabel = team === 'yellow' ? '🟡 Жёлтая' : '🔵 Синяя';
+      const savedDate = new Date(state.lastLineup.savedAt);
+      const timeStr = savedDate.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+      
+      container.innerHTML = `
+        <button class="restore-lineup-btn" onclick="restoreLastLineup()">
+          <span class="icon">⚡</span>
+          <span class="info">
+            <span class="main">Восстановить последний состав</span>
+            <span class="sub">${teamLabel} • ${count} игроков • ${timeStr}</span>
+          </span>
+        </button>
+      `;
+    } else {
+      container.innerHTML = '';
+    }
+  });
 }
 
 function finishMatch() {
@@ -792,6 +932,9 @@ function finishMatch() {
   };
 
   state.matchHistory.push(match);
+  
+  // ← НОВОЕ: сохраняем составы перед очисткой
+  saveLastLineup();
 
   state.score = { yellow: 0, blue: 0 };
   state.teams = { yellow: { players: [] }, blue: { players: [] } };
@@ -801,9 +944,10 @@ function finishMatch() {
   renderPlayers('yellow'); renderPlayers('blue');
   hideActions('yellow'); hideActions('blue');
   updateSelects();
+  renderRestoreButtons();  // ← НОВОЕ: показываем кнопки восстановления
 
   closeFinishModal();
-  toast('Матч сохранён в историю!');
+  toast('Матч сохранён! Составы запомнены ⚡');
   save();
   switchTab('reports');
 }
@@ -826,6 +970,7 @@ function switchTab(tab) {
   if (tab === 'summary') renderSummary();
   else if (tab === 'compare') renderCompare();
   else if (tab === 'reports') renderReports();
+  else if (tab === 'yellow' || tab === 'blue') renderRestoreButtons();
 }
 
 function renderSummary() {
@@ -954,6 +1099,7 @@ function importBackup(event) {
       
       state = backupData.data;
       if (!state.matchHistory) state.matchHistory = [];
+      if (!state.lastLineup) state.lastLineup = null;
       
       document.getElementById('score-yellow').textContent = state.score.yellow;
       document.getElementById('score-blue').textContent = state.score.blue;
@@ -962,6 +1108,7 @@ function importBackup(event) {
       updateSelects();
       renderPlayers('yellow');
       renderPlayers('blue');
+      renderRestoreButtons();
       
       save();
       toast('Данные восстановлены!');
@@ -1439,12 +1586,14 @@ onSnapshot(doc(db, "app", "state"), (docSnap) => {
   if (docSnap.exists()) {
     state = docSnap.data();
     if (!state.matchHistory) state.matchHistory = [];
+    if (!state.lastLineup) state.lastLineup = null;
     document.getElementById('score-yellow').textContent = state.score.yellow;
     document.getElementById('score-blue').textContent = state.score.blue;
     renderRoster();
     updateSelects();
     renderPlayers('yellow');
     renderPlayers('blue');
+    renderRestoreButtons();
     updateSyncStatus('online');
   } else {
     updateSyncStatus('offline');
@@ -1476,6 +1625,7 @@ window.closePreview = closePreview;
 window.saveImage = saveImage;
 window.shareImage = shareImage;
 window.exportData = exportData;
+window.restoreLastLineup = restoreLastLineup;
 </script>
 </body>
 </html>
