@@ -214,7 +214,6 @@
   .mhi-mvp { font-size: 0.8rem; color: var(--gold); margin-top: 3px; }
   .mhi-del { background: none; border: 1px solid #5a3030; color: #ff8888; padding: 6px 10px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; }
 
-  /* ===== АНАЛИТИКА ===== */
   .analytics-header {
     background: linear-gradient(135deg, rgba(155,89,182,0.15) 0%, rgba(52,152,219,0.15) 100%);
     border: 1px solid #3a4a5a;
@@ -252,9 +251,7 @@
     font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s;
   }
-  .period-btn:hover { border-color: var(--accent); color: var(--accent); }
   .period-btn.active {
     background: linear-gradient(135deg, var(--accent), #00a884);
     color: #000;
@@ -285,7 +282,6 @@
     gap: 10px;
     margin-bottom: 15px;
     flex-wrap: wrap;
-    align-items: center;
   }
   .chart-controls select {
     flex: 1;
@@ -328,7 +324,6 @@
   .chart-stat-card .value {
     font-size: 1.4rem;
     font-weight: 900;
-    color: var(--accent);
     line-height: 1;
   }
   .chart-stat-card .label {
@@ -338,8 +333,6 @@
     letter-spacing: 1px;
     margin-top: 4px;
   }
-  .chart-stat-card.trend-up .value { color: var(--accent); }
-  .chart-stat-card.trend-down .value { color: var(--danger); }
 
   .metrics-legend {
     display: flex;
@@ -366,94 +359,6 @@
     border-radius: 2px;
   }
 
-  /* ===== ТАБЛИЦА ДЕТАЛЬНОЙ СТАТИСТИКИ ===== */
-  .player-stats-table-wrap {
-    overflow-x: auto;
-    margin-top: 15px;
-    border-radius: 8px;
-    border: 1px solid #2a3a4a;
-  }
-  .player-stats-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.85rem;
-    min-width: 600px;
-  }
-  .player-stats-table thead th {
-    background: #1e2e3e;
-    padding: 10px 8px;
-    text-align: center;
-    color: var(--text-dim);
-    font-weight: 600;
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    border-bottom: 2px solid #2a3a4a;
-    position: sticky;
-    top: 0;
-  }
-  .player-stats-table thead th:first-child {
-    text-align: left;
-    padding-left: 12px;
-  }
-  .player-stats-table tbody td {
-    padding: 10px 8px;
-    text-align: center;
-    border-bottom: 1px solid #1e2e3e;
-    color: var(--text);
-  }
-  .player-stats-table tbody td:first-child {
-    text-align: left;
-    padding-left: 12px;
-    color: var(--text-dim);
-    font-size: 0.8rem;
-    white-space: nowrap;
-  }
-  .player-stats-table tbody tr:hover {
-    background: rgba(255,255,255,0.03);
-  }
-  .player-stats-table .metric-cell {
-    font-weight: 700;
-    font-variant-numeric: tabular-nums;
-  }
-  .player-stats-table .metric-cell.points { color: #2980b9; }
-  .player-stats-table .metric-cell.attacks { color: #f5c518; }
-  .player-stats-table .metric-cell.aces { color: #e74c3c; }
-  .player-stats-table .metric-cell.blocks { color: #27ae60; }
-  .player-stats-table .metric-cell.kr { color: #9b59b6; }
-  .player-stats-table tr.total-row {
-    background: rgba(0, 212, 170, 0.08);
-    border-top: 2px solid var(--accent);
-  }
-  .player-stats-table tr.total-row td {
-    font-weight: 800;
-    font-size: 0.95rem;
-    padding: 12px 8px;
-  }
-  .player-stats-table tr.total-row td:first-child {
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  .player-stats-table tr.avg-row {
-    background: rgba(255,255,255,0.02);
-  }
-  .player-stats-table tr.avg-row td {
-    color: var(--text-dim);
-    font-style: italic;
-    font-size: 0.8rem;
-  }
-  .player-stats-table .best-cell {
-    position: relative;
-  }
-  .player-stats-table .best-cell::after {
-    content: '🏆';
-    font-size: 0.7rem;
-    margin-left: 3px;
-    vertical-align: super;
-  }
-
-  /* ===== ЭКСПОРТ ===== */
   .export-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -465,11 +370,6 @@
     border-radius: var(--radius);
     padding: 20px;
     text-align: center;
-    transition: all 0.2s;
-  }
-  .export-card:hover {
-    background: rgba(255,255,255,0.05);
-    border-color: var(--accent);
   }
   .export-card .icon { font-size: 3rem; margin-bottom: 10px; }
   .export-card h4 { font-size: 1.1rem; margin-bottom: 5px; color: var(--text); }
@@ -515,7 +415,6 @@
   .preview-actions button { flex: 1; padding: 14px; border: none; border-radius: 10px; font-weight: 700; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
   .preview-btn-save { background: linear-gradient(135deg, var(--accent), #00a884); color: #000; }
   .preview-btn-share { background: linear-gradient(135deg, #3498db, #2980b9); color: #fff; }
-  .preview-actions button:active { transform: scale(0.97); }
 
   .loading-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 3000; flex-direction: column; gap: 15px; }
   .loading-overlay.show { display: flex; }
@@ -657,7 +556,6 @@
 </div>
 
 <div class="content">
-
   <div class="tab-panel active" id="panel-roster">
     <div class="roster-controls">
       <input type="text" id="roster-name" placeholder="Имя игрока" maxlength="20">
@@ -700,7 +598,6 @@
   <div class="tab-panel" id="panel-compare"><div id="compare-content"></div></div>
   <div class="tab-panel" id="panel-reports"><div id="reports-content"></div></div>
   <div class="tab-panel" id="panel-analytics"><div id="analytics-content"></div></div>
-
 </div>
 
 <div class="modal-overlay" id="finish-modal">
@@ -1245,10 +1142,8 @@ function getPlayerPeriodData(playerKey, period) {
   const matches = getMatchesByPeriod(period);
   const data = [];
   
-  // Функция поиска игрока с нечётким сопоставлением
   const findPlayer = (players) => {
     return players.find(p => {
-      // Сравниваем как строки — решает проблему с типами из Firebase
       const pKey = String(p.rosterId || p.name);
       const searchKey = String(playerKey);
       return pKey === searchKey || p.name === playerKey;
@@ -1257,46 +1152,51 @@ function getPlayerPeriodData(playerKey, period) {
   
   matches.forEach((match, matchIdx) => {
     let playerStats = null;
-    
     const yellowPlayer = findPlayer(match.teams.yellow.players);
     if (yellowPlayer) playerStats = yellowPlayer.stats;
     else {
       const bluePlayer = findPlayer(match.teams.blue.players);
       if (bluePlayer) playerStats = bluePlayer.stats;
     }
+    if (playerStats) {
+      const kr = (playerStats.points||0) + (playerStats.aces||0) + (playerStats.blocks||0) + 
+                 (playerStats.attacks||0) + (playerStats.assists||0) + (playerStats.receptions||0) - 
+                 (playerStats.outs||0) - (playerStats.serviceErrors||0);
+      data.push({
+        matchIdx: matchIdx + 1,
+        date: match.date,
+        time: match.time,
+        points: playerStats.points || 0,
+        aces: playerStats.aces || 0,
+        blocks: playerStats.blocks || 0,
+        attacks: playerStats.attacks || 0,
+        kr: kr
+      });
+    }
+  });
+  return data;
+}
 
 function getAllPlayersFromHistory() {
   const playersMap = new Map();
   state.matchHistory.forEach(match => {
     ['yellow', 'blue'].forEach(team => {
       match.teams[team].players.forEach(p => {
-        // Используем строку как ключ — это решает проблему с типами
         const key = String(p.rosterId || p.name);
         if (!playersMap.has(key)) {
-          playersMap.set(key, { 
-            key, 
-            name: p.name, 
-            number: p.number, 
-            rosterId: p.rosterId,
-            matchesCount: 0  // Считаем матчи для автовыбора
-          });
+          playersMap.set(key, { key, name: p.name, number: p.number, rosterId: p.rosterId, matchesCount: 0 });
         }
       });
     });
   });
-  
-  // Подсчитываем количество матчей для каждого игрока
   state.matchHistory.forEach(match => {
     ['yellow', 'blue'].forEach(team => {
       match.teams[team].players.forEach(p => {
         const key = String(p.rosterId || p.name);
-        if (playersMap.has(key)) {
-          playersMap.get(key).matchesCount++;
-        }
+        if (playersMap.has(key)) playersMap.get(key).matchesCount++;
       });
     });
   });
-  
   return Array.from(playersMap.values());
 }
 
@@ -1355,16 +1255,6 @@ function renderAnalytics() {
     </div>
   `;
   
-  // ===== НОВАЯ СЕКЦИЯ: ДЕТАЛЬНАЯ СТАТИСТИКА В ТАБЛИЦЕ =====
-  h += `
-    <div class="analytics-section">
-      <h3><span class="icon">📋</span> Детальная статистика за период</h3>
-      <div id="player-stats-table-container">
-        <div class="empty-msg">Выберите игрока в графике выше, чтобы увидеть детальную статистику.</div>
-      </div>
-    </div>
-  `;
-  
   h += `
     <div class="analytics-section">
       <h3><span class="icon">📥</span> Экспорт статистики</h3>
@@ -1406,16 +1296,11 @@ function initAnalyticsChart() {
   Chart.defaults.borderColor = '#2a3a4a';
   Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
   
-  // Отрисовываем легенду метрик
   renderMetricsLegend();
   
   const playerSelect = document.getElementById('analytics-player-select');
-  if (!playerSelect || playerSelect.options.length <= 1) {
-    console.log('📊 Аналитика: нет игроков для выбора');
-    return;
-  }
+  if (!playerSelect || playerSelect.options.length <= 1) return;
   
-  // Находим игрока с наибольшим количеством матчей (для автовыбора)
   const allPlayers = getAllPlayersFromHistory();
   if (allPlayers.length === 0) return;
   
@@ -1423,13 +1308,7 @@ function initAnalyticsChart() {
     (p.matchesCount || 0) > (best.matchesCount || 0) ? p : best
   , allPlayers[0]);
   
-  // Устанавливаем выбранного игрока
   playerSelect.value = topPlayer.key;
-  
-  console.log('📊 Аналитика: автовыбор игрока', topPlayer.name, 'ключ:', topPlayer.key);
-  console.log('📊 Всего матчей в истории:', state.matchHistory.length);
-  
-  // Обновляем график
   updatePlayerMetricsChart();
 }
 
@@ -1447,40 +1326,22 @@ function renderMetricsLegend() {
 
 function updatePlayerMetricsChart() {
   const playerSelect = document.getElementById('analytics-player-select');
-  if (!playerSelect) {
-    console.error('❌ Селектор игрока не найден');
-    return;
-  }
+  if (!playerSelect) return;
   
   const playerKey = playerSelect.value;
   const statsContainer = document.getElementById('player-metrics-stats');
   
-  console.log('🔍 Поиск игрока с ключом:', playerKey);
-  console.log('🔍 Всего матчей:', state.matchHistory.length);
-  
   if (!playerKey) {
     if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
     if (statsContainer) statsContainer.innerHTML = '';
-    // Очищаем таблицу тоже
-    const tableContainer = document.getElementById('player-stats-table-container');
-    if (tableContainer) tableContainer.innerHTML = '<div class="empty-msg">Выберите игрока в графике выше, чтобы увидеть детальную статистику.</div>';
     return;
   }
   
-    const data = getPlayerPeriodData(playerKey, currentPeriod);
-  console.log('📊 Найдено матчей для игрока:', data.length);
-  console.log('📊 Данные:', data);
+  const data = getPlayerPeriodData(playerKey, currentPeriod);
   
   if (data.length === 0) {
     if (statsContainer) {
-      statsContainer.innerHTML = `
-        <div class="empty-msg">
-          Нет данных для этого игрока за выбранный период.<br>
-          <small style="color: var(--text-dim);">
-            Проверьте, что игрок участвовал в матчах за этот период.
-          </small>
-        </div>
-      `;
+      statsContainer.innerHTML = '<div class="empty-msg">Нет данных для этого игрока за выбранный период</div>';
     }
     return;
   }
@@ -1558,8 +1419,6 @@ function updatePlayerMetricsChart() {
           borderColor: '#3a4a5a',
           borderWidth: 1,
           padding: 12,
-          titleFont: { size: 13, weight: '700' },
-          bodyFont: { size: 12 },
           callbacks: {
             title: (items) => {
               if (items.length > 0) {
@@ -1573,111 +1432,18 @@ function updatePlayerMetricsChart() {
         }
       },
       scales: {
-        y: { beginAtZero: true, grid: { color: 'rgba(42, 58, 74, 0.5)' }, ticks: { color: '#8899aa' } },
-        x: { grid: { display: false }, ticks: { color: '#8899aa', maxRotation: 45 } }
+        y: {
+          beginAtZero: true,
+          grid: { color: 'rgba(42, 58, 74, 0.5)' },
+          ticks: { color: '#8899aa' }
+        },
+        x: {
+          grid: { display: false },
+          ticks: { color: '#8899aa', maxRotation: 45 }
+        }
       }
     }
   });
-  
-  // ===== ОТРИСОВКА ТАБЛИЦЫ ДЕТАЛЬНОЙ СТАТИСТИКИ =====
-  renderPlayerStatsTable(playerKey, data);
-}
-
-// ============================================
-// ТАБЛИЦА ДЕТАЛЬНОЙ СТАТИСТИКИ ИГРОКА
-// ============================================
-function renderPlayerStatsTable(playerKey, data) {
-  const container = document.getElementById('player-stats-table-container');
-  if (!container) return;
-  
-  if (!data || data.length === 0) {
-    container.innerHTML = '<div class="empty-msg">Нет данных за выбранный период</div>';
-    return;
-  }
-  
-  // Подсчёт итогов и максимумов
-  const totals = { points: 0, attacks: 0, aces: 0, blocks: 0, kr: 0 };
-  const maxes = { points: 0, attacks: 0, aces: 0, blocks: 0, kr: 0 };
-  
-  data.forEach(d => {
-    totals.points += d.points;
-    totals.attacks += d.attacks;
-    totals.aces += d.aces;
-    totals.blocks += d.blocks;
-    totals.kr += d.kr;
-    
-    if (d.points > maxes.points) maxes.points = d.points;
-    if (d.attacks > maxes.attacks) maxes.attacks = d.attacks;
-    if (d.aces > maxes.aces) maxes.aces = d.aces;
-    if (d.blocks > maxes.blocks) maxes.blocks = d.blocks;
-    if (d.kr > maxes.kr) maxes.kr = d.kr;
-  });
-  
-  const avg = {
-    points: (totals.points / data.length).toFixed(1),
-    attacks: (totals.attacks / data.length).toFixed(1),
-    aces: (totals.aces / data.length).toFixed(1),
-    blocks: (totals.blocks / data.length).toFixed(1),
-    kr: (totals.kr / data.length).toFixed(1)
-  };
-  
-  let html = `
-    <div class="player-stats-table-wrap">
-      <table class="player-stats-table">
-        <thead>
-          <tr>
-            <th>Дата матча</th>
-            <th>⭐ Очки</th>
-            <th>💥 Атаки</th>
-            <th>🎯 Эйсы</th>
-            <th>🧱 Блоки</th>
-            <th>🏆 КР</th>
-          </tr>
-        </thead>
-        <tbody>
-  `;
-  
-  data.forEach(d => {
-    const date = new Date(d.date);
-    const dateStr = `${date.getDate()}.${String(date.getMonth()+1).padStart(2,'0')}.${date.getFullYear()}`;
-    
-    html += `
-      <tr>
-        <td>${dateStr}<br><span style="font-size:0.7rem;opacity:0.6">${d.time}</span></td>
-        <td class="metric-cell points ${d.points === maxes.points && d.points > 0 ? 'best-cell' : ''}">${d.points}</td>
-        <td class="metric-cell attacks ${d.attacks === maxes.attacks && d.attacks > 0 ? 'best-cell' : ''}">${d.attacks}</td>
-        <td class="metric-cell aces ${d.aces === maxes.aces && d.aces > 0 ? 'best-cell' : ''}">${d.aces}</td>
-        <td class="metric-cell blocks ${d.blocks === maxes.blocks && d.blocks > 0 ? 'best-cell' : ''}">${d.blocks}</td>
-        <td class="metric-cell kr ${d.kr === maxes.kr && d.kr > 0 ? 'best-cell' : ''}">${d.kr}</td>
-      </tr>
-    `;
-  });
-  
-  html += `
-    <tr class="avg-row">
-      <td>Среднее за матч</td>
-      <td>${avg.points}</td>
-      <td>${avg.attacks}</td>
-      <td>${avg.aces}</td>
-      <td>${avg.blocks}</td>
-      <td>${avg.kr}</td>
-    </tr>
-  `;
-  
-  html += `
-    <tr class="total-row">
-      <td>ИТОГО за ${data.length} матч(ов)</td>
-      <td class="metric-cell points">${totals.points}</td>
-      <td class="metric-cell attacks">${totals.attacks}</td>
-      <td class="metric-cell aces">${totals.aces}</td>
-      <td class="metric-cell blocks">${totals.blocks}</td>
-      <td class="metric-cell kr">${Math.round(totals.kr * 10) / 10}</td>
-    </tr>
-  `;
-  
-  html += `</tbody></table></div>`;
-  
-  container.innerHTML = html;
 }
 
 // ============================================
