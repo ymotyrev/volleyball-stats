@@ -226,16 +226,12 @@
   .analytics-header h2 { font-size: 1.3rem; margin-bottom: 5px; }
   .analytics-header .subtitle { color: var(--text-dim); font-size: 0.9rem; }
 
-  /* Общий селектор периода */
   .period-selector {
     background: var(--card);
     border: 1px solid #2a3a4a;
     border-radius: var(--radius);
     padding: 15px;
     margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
   }
   .period-selector-label {
     font-size: 0.8rem;
@@ -243,15 +239,11 @@
     text-transform: uppercase;
     letter-spacing: 1px;
     font-weight: 600;
+    margin-bottom: 10px;
   }
-  .period-buttons {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
+  .period-buttons { display: flex; gap: 6px; flex-wrap: wrap; }
   .period-btn {
-    flex: 1;
-    min-width: 80px;
+    flex: 1; min-width: 80px;
     padding: 10px 14px;
     border: 1px solid #3a4a5a;
     border-radius: 8px;
@@ -268,6 +260,8 @@
     color: #000;
     border-color: var(--accent);
   }
+  .period-info { font-size: 0.8rem; color: var(--text-dim); margin-top: 10px; }
+  .period-info strong { color: var(--accent); }
 
   .analytics-section {
     background: var(--card);
@@ -304,49 +298,11 @@
     font-size: 0.9rem;
     outline: none;
   }
-  
-  /* Множественный выбор игроков */
-  .players-checkboxes {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 15px;
-    padding: 10px;
-    background: rgba(0,0,0,0.2);
-    border-radius: 8px;
-    max-height: 150px;
-    overflow-y: auto;
-  }
-  .player-checkbox {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 10px;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid #3a4a5a;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.85rem;
-    transition: all 0.2s;
-  }
-  .player-checkbox:hover { background: rgba(255,255,255,0.1); }
-  .player-checkbox.checked {
-    background: rgba(0, 212, 170, 0.15);
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-  .player-checkbox input { display: none; }
-  .player-checkbox .color-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
 
   .chart-container {
     position: relative;
     width: 100%;
-    height: 300px;
+    height: 320px;
     background: rgba(0,0,0,0.2);
     border-radius: 8px;
     padding: 10px;
@@ -358,7 +314,7 @@
 
   .chart-stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
     gap: 10px;
     margin-top: 15px;
   }
@@ -370,13 +326,13 @@
     text-align: center;
   }
   .chart-stat-card .value {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 900;
     color: var(--accent);
     line-height: 1;
   }
   .chart-stat-card .label {
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     color: var(--text-dim);
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -384,6 +340,32 @@
   }
   .chart-stat-card.trend-up .value { color: var(--accent); }
   .chart-stat-card.trend-down .value { color: var(--danger); }
+
+  /* Легенда метрик (под графиком) */
+  .metrics-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 15px;
+    padding: 12px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 8px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 6px;
+    font-size: 0.8rem;
+    color: var(--text);
+  }
+  .legend-color {
+    width: 14px;
+    height: 3px;
+    border-radius: 2px;
+  }
 
   /* ===== ЭКСПОРТ ===== */
   .export-grid {
@@ -538,7 +520,7 @@
     .mvp-podium { gap: 4px; }
     .mvp-name { font-size: 0.7rem; }
     .compare-team .ct-score { font-size: 2rem; }
-    .chart-container { height: 260px; }
+    .chart-container { height: 280px; }
     .export-grid { grid-template-columns: 1fr; }
     .period-btn { min-width: 70px; padding: 8px 10px; font-size: 0.8rem; }
   }
@@ -628,21 +610,10 @@
     </div>
   </div>
 
-  <div class="tab-panel" id="panel-summary">
-    <div id="summary-content"></div>
-  </div>
-
-  <div class="tab-panel" id="panel-compare">
-    <div id="compare-content"></div>
-  </div>
-
-  <div class="tab-panel" id="panel-reports">
-    <div id="reports-content"></div>
-  </div>
-
-  <div class="tab-panel" id="panel-analytics">
-    <div id="analytics-content"></div>
-  </div>
+  <div class="tab-panel" id="panel-summary"><div id="summary-content"></div></div>
+  <div class="tab-panel" id="panel-compare"><div id="compare-content"></div></div>
+  <div class="tab-panel" id="panel-reports"><div id="reports-content"></div></div>
+  <div class="tab-panel" id="panel-analytics"><div id="analytics-content"></div></div>
 
 </div>
 
@@ -667,12 +638,8 @@
     <img id="preview-image" alt="Отчёт">
   </div>
   <div class="preview-actions">
-    <button class="preview-btn-save" onclick="saveImage()">
-      <span>📥</span><span>Сохранить</span>
-    </button>
-    <button class="preview-btn-share" onclick="shareImage()">
-      <span>📤</span><span>Поделиться</span>
-    </button>
+    <button class="preview-btn-save" onclick="saveImage()"><span>📥</span><span>Сохранить</span></button>
+    <button class="preview-btn-share" onclick="shareImage()"><span>📤</span><span>Поделиться</span></button>
   </div>
 </div>
 
@@ -720,23 +687,19 @@ let state = JSON.parse(JSON.stringify(defaultState));
 let currentCanvas = null;
 let currentFilename = '';
 let isSyncing = false;
-
-// Текущий выбранный период
 let currentPeriod = 'all';
-// Выбранные игроки для сравнения (до 5)
-let selectedComparePlayers = [];
+let chartInstance = null;
 
-let chartInstances = {
-  playerProgress: null,
-  playersCompare: null,
-  playerMetrics: null
+// ============================================
+// ЦВЕТА МЕТРИК (для графика и легенды)
+// ============================================
+const METRIC_COLORS = {
+  points:        { color: '#2980b9', label: '⭐ Очки' },
+  attacks:       { color: '#f5c518', label: '💥 Атаки' },
+  aces:          { color: '#e74c3c', label: '🎯 Эйсы' },
+  blocks:        { color: '#27ae60', label: '🧱 Блоки' },
+  kr:            { color: '#9b59b6', label: '🏆 КР' }
 };
-
-// Цвета для линий графиков
-const CHART_COLORS = [
-  '#00d4aa', '#f5c518', '#2980b9', '#e74c3c', '#9b59b6',
-  '#f39c12', '#1abc9c', '#3498db', '#e67e22', '#16a085'
-];
 
 const STAT_DEFS = [
   { key: 'points', label: 'Очки', icon: '⭐' },
@@ -865,15 +828,11 @@ function selectPlayer(team, idx) {
   const now = Date.now();
   if (now - lastSelectTime < 300) return;
   lastSelectTime = now;
-  
   if (navigator.vibrate) navigator.vibrate(30);
-  
   if (state.selected[team] === idx) { 
-    state.selected[team] = null; 
-    hideActions(team); 
+    state.selected[team] = null; hideActions(team); 
   } else { 
-    state.selected[team] = idx; 
-    showActions(team, idx); 
+    state.selected[team] = idx; showActions(team, idx); 
   }
   renderPlayers(team);
 }
@@ -897,7 +856,6 @@ function showActions(team, idx) {
   const p = state.teams[team].players[idx];
   document.getElementById('actions-' + team).classList.add('visible');
   document.getElementById('ap-name-' + team).textContent = `#${p.number||'—'} ${p.name}`;
-  
   document.getElementById('action-grid-' + team).innerHTML = ACTION_BUTTONS.map(s => `
     <div class="action-pair">
       <button class="action-btn plus" onclick="recordAction('${team}',${idx},'${s.key}',1)">
@@ -963,7 +921,6 @@ function openFinishModal() {
   const yp = state.teams.yellow.players.length;
   const bp = state.teams.blue.players.length;
   if (yp === 0 && bp === 0) { toast('Добавьте игроков'); return; }
-  
   const modal = document.getElementById('finish-modal');
   const inputs = document.getElementById('sets-inputs');
   let html = '';
@@ -984,75 +941,46 @@ function closeFinishModal() {
 }
 
 function saveLastLineup() {
-  const yellowLineup = state.teams.yellow.players.map(p => ({
-    rosterId: p.rosterId, name: p.name, number: p.number
-  }));
-  const blueLineup = state.teams.blue.players.map(p => ({
-    rosterId: p.rosterId, name: p.name, number: p.number
-  }));
-  
+  const yellowLineup = state.teams.yellow.players.map(p => ({ rosterId: p.rosterId, name: p.name, number: p.number }));
+  const blueLineup = state.teams.blue.players.map(p => ({ rosterId: p.rosterId, name: p.name, number: p.number }));
   if (yellowLineup.length > 0 || blueLineup.length > 0) {
-    state.lastLineup = {
-      yellow: yellowLineup, blue: blueLineup,
-      savedAt: new Date().toISOString()
-    };
+    state.lastLineup = { yellow: yellowLineup, blue: blueLineup, savedAt: new Date().toISOString() };
   }
 }
 
 function restoreLastLineup() {
   if (!state.lastLineup) { toast('Нет сохранённого состава'); return; }
-  
   if (state.teams.yellow.players.length > 0 || state.teams.blue.players.length > 0) {
     if (!confirm('Восстановить последний состав? Текущие команды будут заменены.')) return;
   }
-  
   state.teams.yellow.players = [];
   state.lastLineup.yellow.forEach(saved => {
-    const rosterPlayer = state.roster.find(r => r.id === saved.rosterId);
-    if (rosterPlayer) {
-      state.teams.yellow.players.push({
-        rosterId: rosterPlayer.id, name: rosterPlayer.name, number: rosterPlayer.number,
-        stats: { points:0, aces:0, blocks:0, receptions:0, outs:0, attacks:0, serviceErrors:0, assists:0 }
-      });
-    }
+    const rp = state.roster.find(r => r.id === saved.rosterId);
+    if (rp) state.teams.yellow.players.push({ rosterId: rp.id, name: rp.name, number: rp.number, stats: { points:0, aces:0, blocks:0, receptions:0, outs:0, attacks:0, serviceErrors:0, assists:0 } });
   });
-  
   state.teams.blue.players = [];
   state.lastLineup.blue.forEach(saved => {
-    const rosterPlayer = state.roster.find(r => r.id === saved.rosterId);
-    if (rosterPlayer) {
-      state.teams.blue.players.push({
-        rosterId: rosterPlayer.id, name: rosterPlayer.name, number: rosterPlayer.number,
-        stats: { points:0, aces:0, blocks:0, receptions:0, outs:0, attacks:0, serviceErrors:0, assists:0 }
-      });
-    }
+    const rp = state.roster.find(r => r.id === saved.rosterId);
+    if (rp) state.teams.blue.players.push({ rosterId: rp.id, name: rp.name, number: rp.number, stats: { points:0, aces:0, blocks:0, receptions:0, outs:0, attacks:0, serviceErrors:0, assists:0 } });
   });
-  
   state.selected = { yellow: null, blue: null };
   hideActions('yellow'); hideActions('blue');
   updateSelects();
   renderPlayers('yellow'); renderPlayers('blue');
   renderRestoreButtons();
   save();
-  
-  const totalPlayers = state.teams.yellow.players.length + state.teams.blue.players.length;
-  toast(`Состав восстановлен: ${totalPlayers} игроков`);
+  toast(`Состав восстановлен: ${state.teams.yellow.players.length + state.teams.blue.players.length} игроков`);
 }
 
 function renderRestoreButtons() {
   ['yellow', 'blue'].forEach(team => {
     const container = document.getElementById(`restore-${team}-container`);
-    const hasLineup = state.lastLineup && 
-                     ((team === 'yellow' && state.lastLineup.yellow.length > 0) ||
-                      (team === 'blue' && state.lastLineup.blue.length > 0));
+    const hasLineup = state.lastLineup && ((team === 'yellow' && state.lastLineup.yellow.length > 0) || (team === 'blue' && state.lastLineup.blue.length > 0));
     const teamEmpty = state.teams[team].players.length === 0;
-    
     if (hasLineup && teamEmpty) {
       const count = team === 'yellow' ? state.lastLineup.yellow.length : state.lastLineup.blue.length;
       const teamLabel = team === 'yellow' ? '🟡 Жёлтая' : '🔵 Синяя';
-      const savedDate = new Date(state.lastLineup.savedAt);
-      const timeStr = savedDate.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
-      
+      const timeStr = new Date(state.lastLineup.savedAt).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
       container.innerHTML = `
         <button class="restore-lineup-btn" onclick="restoreLastLineup()">
           <span class="icon">⚡</span>
@@ -1060,8 +988,7 @@ function renderRestoreButtons() {
             <span class="main">Восстановить последний состав</span>
             <span class="sub">${teamLabel} • ${count} игроков • ${timeStr}</span>
           </span>
-        </button>
-      `;
+        </button>`;
     } else {
       container.innerHTML = '';
     }
@@ -1073,33 +1000,26 @@ function finishMatch() {
   for (let i = 1; i <= 5; i++) {
     const y = parseInt(document.getElementById(`set-y-${i}`).value);
     const b = parseInt(document.getElementById(`set-b-${i}`).value);
-    if (!isNaN(y) || !isNaN(b)) {
-      sets.push({ y: isNaN(y) ? 0 : y, b: isNaN(b) ? 0 : b });
-    }
+    if (!isNaN(y) || !isNaN(b)) sets.push({ y: isNaN(y) ? 0 : y, b: isNaN(b) ? 0 : b });
   }
-
   const top3 = getMvpTop3();
   const mvp = top3.length > 0 && top3[0].mvpScore > 0 ? {
     name: top3[0].name, number: top3[0].number, team: top3[0].team,
     score: top3[0].mvpScore, stats: { ...top3[0].stats }
   } : null;
-
   const match = {
     id: Date.now(),
     date: new Date().toISOString().split('T')[0],
     time: new Date().toTimeString().slice(0, 5),
-    score: { ...state.score },
-    sets: sets,
+    score: { ...state.score }, sets: sets,
     teams: {
       yellow: { players: state.teams.yellow.players.map(p => ({ ...p, stats: { ...p.stats } })) },
       blue: { players: state.teams.blue.players.map(p => ({ ...p, stats: { ...p.stats } })) }
     },
     mvp: mvp
   };
-
   state.matchHistory.push(match);
   saveLastLineup();
-
   state.score = { yellow: 0, blue: 0 };
   state.teams = { yellow: { players: [] }, blue: { players: [] } };
   state.selected = { yellow: null, blue: null };
@@ -1107,9 +1027,7 @@ function finishMatch() {
   document.getElementById('score-blue').textContent = '0';
   renderPlayers('yellow'); renderPlayers('blue');
   hideActions('yellow'); hideActions('blue');
-  updateSelects();
-  renderRestoreButtons();
-
+  updateSelects(); renderRestoreButtons();
   closeFinishModal();
   toast('Матч сохранён! Составы запомнены ⚡');
   save();
@@ -1119,8 +1037,7 @@ function finishMatch() {
 function deleteMatch(id) {
   if (!confirm('Удалить матч из истории?')) return;
   state.matchHistory = state.matchHistory.filter(m => m.id !== id);
-  renderReports();
-  save();
+  renderReports(); save();
 }
 
 function switchTab(tab) {
@@ -1134,7 +1051,6 @@ function switchTab(tab) {
     analytics: 'active-analytics'
   };
   btn.classList.add(classes[tab]);
-
   if (tab === 'summary') renderSummary();
   else if (tab === 'compare') renderCompare();
   else if (tab === 'reports') renderReports();
@@ -1198,7 +1114,6 @@ function renderCompare() {
     <div class="compare-vs">VS</div>
     <div class="compare-team blue"><div class="ct-label">🔵 Синяя</div><div class="ct-score">${state.score.blue}</div></div>
   </div><table class="compare-table"><thead><tr><th>Показатель</th><th>🟡</th><th></th><th>🔵</th></tr></thead><tbody>`;
-  
   const metrics = [
     { k: 'points', l: '⭐ Очки' }, { k: 'aces', l: '🎯 Эйсы' }, { k: 'blocks', l: '🧱 Блоки' },
     { k: 'attacks', l: '💥 Атаки' }, { k: 'assists', l: '🎯 Передачи' }, { k: 'receptions', l: '🤲 Приём' },
@@ -1227,119 +1142,67 @@ function renderCompare() {
 }
 
 // ============================================
-// АНАЛИТИКА: ФИЛЬТРАЦИЯ ПО ПЕРИОДУ
+// АНАЛИТИКА: ПОКАЗАТЕЛИ ИГРОКА ЗА ПЕРИОД
 // ============================================
 
 function getMatchesByPeriod(period) {
   const now = new Date();
   let cutoffDate = null;
-  
   switch (period) {
-    case 'month':
-      cutoffDate = new Date(now);
-      cutoffDate.setMonth(cutoffDate.getMonth() - 1);
-      break;
-    case '3months':
-      cutoffDate = new Date(now);
-      cutoffDate.setMonth(cutoffDate.getMonth() - 3);
-      break;
-    case 'year':
-      cutoffDate = new Date(now);
-      cutoffDate.setFullYear(cutoffDate.getFullYear() - 1);
-      break;
-    case 'all':
-    default:
-      return state.matchHistory;
+    case 'month': cutoffDate = new Date(now); cutoffDate.setMonth(cutoffDate.getMonth() - 1); break;
+    case '3months': cutoffDate = new Date(now); cutoffDate.setMonth(cutoffDate.getMonth() - 3); break;
+    case 'year': cutoffDate = new Date(now); cutoffDate.setFullYear(cutoffDate.getFullYear() - 1); break;
+    default: return state.matchHistory;
   }
-  
   const cutoffStr = cutoffDate.toISOString().split('T')[0];
   return state.matchHistory.filter(m => m.date >= cutoffStr);
-}
-
-function getPeriodLabel(period) {
-  const labels = {
-    'all': 'Всё время',
-    'month': 'Месяц',
-    '3months': '3 месяца',
-    'year': 'Год'
-  };
-  return labels[period] || 'Всё время';
 }
 
 function getPlayerPeriodData(playerKey, period) {
   const matches = getMatchesByPeriod(period);
   const data = [];
-  
   matches.forEach((match, matchIdx) => {
     let playerStats = null;
-    let teamName = null;
-    
-    const yellowPlayer = match.teams.yellow.players.find(p => 
-      p.rosterId === playerKey || p.name === playerKey
-    );
-    if (yellowPlayer) {
-      playerStats = yellowPlayer.stats;
-      teamName = 'yellow';
-    } else {
-      const bluePlayer = match.teams.blue.players.find(p => 
-        p.rosterId === playerKey || p.name === playerKey
-      );
-      if (bluePlayer) {
-        playerStats = bluePlayer.stats;
-        teamName = 'blue';
-      }
+    const yellowPlayer = match.teams.yellow.players.find(p => p.rosterId === playerKey || p.name === playerKey);
+    if (yellowPlayer) playerStats = yellowPlayer.stats;
+    else {
+      const bluePlayer = match.teams.blue.players.find(p => p.rosterId === playerKey || p.name === playerKey);
+      if (bluePlayer) playerStats = bluePlayer.stats;
     }
-    
     if (playerStats) {
+      const kr = (playerStats.points||0) + (playerStats.aces||0) + (playerStats.blocks||0) + 
+                 (playerStats.attacks||0) + (playerStats.assists||0) + (playerStats.receptions||0) - 
+                 (playerStats.outs||0) - (playerStats.serviceErrors||0);
       data.push({
         matchIdx: matchIdx + 1,
         date: match.date,
         time: match.time,
-        team: teamName,
-        score: match.score,
         points: playerStats.points || 0,
         aces: playerStats.aces || 0,
         blocks: playerStats.blocks || 0,
         attacks: playerStats.attacks || 0,
-        outs: playerStats.outs || 0,
-        serviceErrors: playerStats.serviceErrors || 0,
-        receptions: playerStats.receptions || 0,
-        assists: playerStats.assists || 0,
-        kr: (playerStats.points||0) + (playerStats.aces||0) + (playerStats.blocks||0) + 
-            (playerStats.attacks||0) + (playerStats.assists||0) + (playerStats.receptions||0) - 
-            (playerStats.outs||0) - (playerStats.serviceErrors||0)
+        kr: kr
       });
     }
   });
-  
   return data;
 }
 
 function getAllPlayersFromHistory() {
   const playersMap = new Map();
-  
   state.matchHistory.forEach(match => {
     ['yellow', 'blue'].forEach(team => {
       match.teams[team].players.forEach(p => {
         const key = p.rosterId || p.name;
         if (!playersMap.has(key)) {
-          playersMap.set(key, {
-            key: key,
-            name: p.name,
-            number: p.number,
-            rosterId: p.rosterId
-          });
+          playersMap.set(key, { key, name: p.name, number: p.number, rosterId: p.rosterId });
         }
       });
     });
   });
-  
   return Array.from(playersMap.values());
 }
 
-// ============================================
-// ОТРИСОВКА ВКЛАДКИ АНАЛИТИКА
-// ============================================
 function renderAnalytics() {
   const c = document.getElementById('analytics-content');
   const allPlayers = getAllPlayersFromHistory();
@@ -1348,16 +1211,13 @@ function renderAnalytics() {
   
   let h = `
     <div class="analytics-header">
-      <h2>📈 Аналитика сезона</h2>
+      <h2>📈 Показатели игрока</h2>
       <div class="subtitle">Всего матчей в истории: ${state.matchHistory.length} • Игроков: ${allPlayers.length}</div>
     </div>
   `;
   
   if (state.matchHistory.length === 0) {
-    h += `<div class="empty-msg">
-      Нет сыгранных матчей.<br>
-      Завершите хотя бы один матч, чтобы увидеть графики.
-    </div>`;
+    h += `<div class="empty-msg">Нет сыгранных матчей.<br>Завершите хотя бы один матч, чтобы увидеть графики.</div>`;
     c.innerHTML = h;
     return;
   }
@@ -1372,79 +1232,22 @@ function renderAnalytics() {
         <button class="period-btn ${currentPeriod === '3months' ? 'active' : ''}" onclick="setPeriod('3months')">3 месяца</button>
         <button class="period-btn ${currentPeriod === 'year' ? 'active' : ''}" onclick="setPeriod('year')">Год</button>
       </div>
-      <div style="font-size: 0.8rem; color: var(--text-dim); margin-top: 5px;">
-        В выбранном периоде: <strong style="color: var(--accent);">${totalMatches} матч(ей)</strong>
-      </div>
+      <div class="period-info">В выбранном периоде: <strong>${totalMatches} матч(ей)</strong></div>
     </div>
   `;
   
   if (totalMatches === 0) {
-    h += `<div class="empty-msg">
-      В выбранном периоде нет матчей.<br>
-      Попробуйте выбрать другой период.
-    </div>`;
+    h += `<div class="empty-msg">В выбранном периоде нет матчей.<br>Попробуйте выбрать другой период.</div>`;
     c.innerHTML = h;
     return;
   }
   
-  // ===== ГРАФИК 1: ПРОГРЕСС ИГРОКА =====
+  // ===== ГЛАВНЫЙ ГРАФИК: ВСЕ МЕТРИКИ ИГРОКА =====
   h += `
     <div class="analytics-section">
-      <h3><span class="icon">📊</span> Прогресс игрока</h3>
+      <h3><span class="icon">🎯</span> Показатели игрока за период</h3>
       <div class="chart-controls">
-        <select id="chart-player-select" onchange="updatePlayerChart()">
-          <option value="">Выберите игрока...</option>
-          ${allPlayers.map(p => `<option value="${p.key}">#${p.number||'—'} ${esc(p.name)}</option>`).join('')}
-        </select>
-        <select id="chart-metric-select" onchange="updatePlayerChart()">
-          <option value="points">⭐ Очки</option>
-          <option value="aces">🎯 Эйсы</option>
-          <option value="blocks">🧱 Блоки</option>
-          <option value="attacks">💥 Атаки</option>
-          <option value="kr">🏆 Коэф. результативности</option>
-        </select>
-      </div>
-      <div class="chart-container">
-        <canvas id="player-progress-chart"></canvas>
-      </div>
-      <div id="player-chart-stats" class="chart-stats"></div>
-    </div>
-  `;
-  
-  // ===== ГРАФИК 2: СРАВНЕНИЕ ИГРОКОВ (несколько линий) =====
-  h += `
-    <div class="analytics-section">
-      <h3><span class="icon">🏆</span> Сравнение игроков (до 5)</h3>
-      <div class="chart-controls">
-        <select id="compare-metric-select" onchange="updateCompareChart()">
-          <option value="points">⭐ Очки</option>
-          <option value="aces">🎯 Эйсы</option>
-          <option value="blocks">🧱 Блоки</option>
-          <option value="attacks">💥 Атаки</option>
-          <option value="kr">🏆 Коэф. результативности</option>
-        </select>
-      </div>
-      <div class="players-checkboxes" id="compare-players-checkboxes">
-        ${allPlayers.map((p, idx) => `
-          <label class="player-checkbox ${selectedComparePlayers.includes(p.key) ? 'checked' : ''}" data-player="${p.key}">
-            <input type="checkbox" ${selectedComparePlayers.includes(p.key) ? 'checked' : ''} onchange="toggleComparePlayer('${p.key}')">
-            <span class="color-dot" style="background: ${CHART_COLORS[idx % CHART_COLORS.length]}"></span>
-            <span>#${p.number||'—'} ${esc(p.name)}</span>
-          </label>
-        `).join('')}
-      </div>
-      <div class="chart-container">
-        <canvas id="players-compare-chart"></canvas>
-      </div>
-    </div>
-  `;
-  
-  // ===== ГРАФИК 3: ВСЕ МЕТРИКИ ОДНОГО ИГРОКА =====
-  h += `
-    <div class="analytics-section">
-      <h3><span class="icon">🎯</span> Все метрики игрока</h3>
-      <div class="chart-controls">
-        <select id="metrics-player-select" onchange="updateMetricsChart()">
+        <select id="analytics-player-select" onchange="updatePlayerMetricsChart()">
           <option value="">Выберите игрока...</option>
           ${allPlayers.map(p => `<option value="${p.key}">#${p.number||'—'} ${esc(p.name)}</option>`).join('')}
         </select>
@@ -1452,6 +1255,8 @@ function renderAnalytics() {
       <div class="chart-container">
         <canvas id="player-metrics-chart"></canvas>
       </div>
+      <div id="metrics-legend" class="metrics-legend"></div>
+      <div id="player-metrics-stats" class="chart-stats"></div>
     </div>
   `;
   
@@ -1483,109 +1288,51 @@ function renderAnalytics() {
   c.innerHTML = h;
   
   setTimeout(() => {
-    initCharts();
+    initAnalyticsChart();
   }, 100);
 }
 
-// Установка периода
 function setPeriod(period) {
   currentPeriod = period;
   renderAnalytics();
 }
 
-// Переключение игрока в сравнении
-function toggleComparePlayer(playerKey) {
-  const idx = selectedComparePlayers.indexOf(playerKey);
-  if (idx > -1) {
-    selectedComparePlayers.splice(idx, 1);
-  } else {
-    if (selectedComparePlayers.length >= 5) {
-      toast('Можно выбрать максимум 5 игроков');
-      // Сбрасываем чекбокс
-      renderAnalytics();
-      return;
-    }
-    selectedComparePlayers.push(playerKey);
-  }
-  // Обновляем только визуальный стиль чекбоксов
-  document.querySelectorAll('.player-checkbox').forEach(el => {
-    const key = el.dataset.player;
-    if (selectedComparePlayers.includes(key)) {
-      el.classList.add('checked');
-      el.querySelector('input').checked = true;
-    } else {
-      el.classList.remove('checked');
-      el.querySelector('input').checked = false;
-    }
-  });
-  updateCompareChart();
-}
-
-function initCharts() {
+function initAnalyticsChart() {
   Chart.defaults.color = '#8899aa';
   Chart.defaults.borderColor = '#2a3a4a';
   Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
   
-  const playerSelect = document.getElementById('chart-player-select');
+  // Отрисовываем легенду метрик (постоянная, не зависит от игрока)
+  renderMetricsLegend();
+  
+  // Автовыбор первого игрока
+  const playerSelect = document.getElementById('analytics-player-select');
   if (playerSelect && playerSelect.options.length > 1) {
     playerSelect.selectedIndex = 1;
+    updatePlayerMetricsChart();
   }
-  
-  const metricsSelect = document.getElementById('metrics-player-select');
-  if (metricsSelect && metricsSelect.options.length > 1) {
-    metricsSelect.selectedIndex = 1;
-  }
-  
-  // Автовыбор топ-3 игроков для сравнения
-  if (selectedComparePlayers.length === 0) {
-    const allPlayers = getAllPlayersFromHistory();
-    const filteredMatches = getMatchesByPeriod(currentPeriod);
-    
-    // Подсчитываем очки каждого игрока за период
-    const playerPoints = new Map();
-    filteredMatches.forEach(match => {
-      ['yellow', 'blue'].forEach(team => {
-        match.teams[team].players.forEach(p => {
-          const key = p.rosterId || p.name;
-          playerPoints.set(key, (playerPoints.get(key) || 0) + (p.stats.points || 0));
-        });
-      });
-    });
-    
-    // Сортируем и берём топ-3
-    const sorted = Array.from(playerPoints.entries())
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 3)
-      .map(([key]) => key);
-    
-    selectedComparePlayers = sorted;
-    // Обновляем визуальные чекбоксы
-    document.querySelectorAll('.player-checkbox').forEach(el => {
-      const key = el.dataset.player;
-      if (selectedComparePlayers.includes(key)) {
-        el.classList.add('checked');
-        el.querySelector('input').checked = true;
-      }
-    });
-  }
-  
-  updatePlayerChart();
-  updateCompareChart();
-  updateMetricsChart();
 }
 
-// ГРАФИК 1: Прогресс одного игрока
-function updatePlayerChart() {
-  const playerKey = document.getElementById('chart-player-select').value;
-  const metric = document.getElementById('chart-metric-select').value;
+// Отрисовка цветной легенды метрик
+function renderMetricsLegend() {
+  const legendContainer = document.getElementById('metrics-legend');
+  if (!legendContainer) return;
   
-  const statsContainer = document.getElementById('player-chart-stats');
+  legendContainer.innerHTML = Object.entries(METRIC_COLORS).map(([key, m]) => 
+    `<div class="legend-item">
+      <span class="legend-color" style="background: ${m.color}"></span>
+      <span>${m.label}</span>
+    </div>`
+  ).join('');
+}
+
+// ГЛАВНЫЙ ГРАФИК: все метрики одного игрока на одном графике
+function updatePlayerMetricsChart() {
+  const playerKey = document.getElementById('analytics-player-select').value;
+  const statsContainer = document.getElementById('player-metrics-stats');
   
   if (!playerKey) {
-    if (chartInstances.playerProgress) {
-      chartInstances.playerProgress.destroy();
-      chartInstances.playerProgress = null;
-    }
+    if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
     if (statsContainer) statsContainer.innerHTML = '';
     return;
   }
@@ -1600,170 +1347,51 @@ function updatePlayerChart() {
     const date = new Date(d.date);
     return `${date.getDate()}.${String(date.getMonth()+1).padStart(2,'0')}`;
   });
-  const values = data.map(d => d[metric]);
   
-  // Статистика
-  const total = values.reduce((a, b) => a + b, 0);
-  const avg = total / values.length;
-  const max = Math.max(...values);
-  const trend = values.length >= 2 ? values[values.length - 1] - values[0] : 0;
-  const trendClass = trend > 0 ? 'trend-up' : (trend < 0 ? 'trend-down' : '');
-  const trendSymbol = trend > 0 ? '↗' : (trend < 0 ? '↘' : '→');
+  // Создаём 5 линий (datasets) для каждой метрики
+  const datasets = Object.entries(METRIC_COLORS).map(([key, metric]) => ({
+    label: metric.label,
+    data: data.map(d => d[key]),
+    borderColor: metric.color,
+    backgroundColor: metric.color + '20',
+    borderWidth: 3,
+    fill: false,
+    tension: 0.4,
+    pointBackgroundColor: metric.color,
+    pointBorderColor: '#0f1923',
+    pointBorderWidth: 2,
+    pointRadius: 5,
+    pointHoverRadius: 8
+  }));
   
-  const metricLabels = {
-    points: 'Очки', aces: 'Эйсы', blocks: 'Блоки', attacks: 'Атаки', kr: 'КР'
-  };
-  
-  if (statsContainer) {
-    statsContainer.innerHTML = `
+  // Статистика: суммы и тренды по каждой метрике
+  const statsHtml = Object.entries(METRIC_COLORS).map(([key, metric]) => {
+    const values = data.map(d => d[key]);
+    const total = values.reduce((a, b) => a + b, 0);
+    const avg = total / values.length;
+    const trend = values.length >= 2 ? values[values.length - 1] - values[0] : 0;
+    const trendSymbol = trend > 0 ? '↗' : (trend < 0 ? '↘' : '→');
+    const trendColor = trend > 0 ? 'var(--accent)' : (trend < 0 ? 'var(--danger)' : 'var(--text-dim)');
+    
+    return `
       <div class="chart-stat-card">
-        <div class="value">${total}</div>
-        <div class="label">Всего ${metricLabels[metric]}</div>
-      </div>
-      <div class="chart-stat-card">
-        <div class="value">${avg.toFixed(1)}</div>
-        <div class="label">Среднее за матч</div>
-      </div>
-      <div class="chart-stat-card">
-        <div class="value">${max}</div>
-        <div class="label">Лучший матч</div>
-      </div>
-      <div class="chart-stat-card ${trendClass}">
-        <div class="value">${trendSymbol} ${Math.abs(trend)}</div>
-        <div class="label">Прогресс за период</div>
+        <div class="value" style="color: ${metric.color}">${total}</div>
+        <div class="label">${metric.label.replace(/^[^\s]+\s/, '')}</div>
+        <div style="font-size: 0.7rem; color: var(--text-dim); margin-top: 4px;">
+          ср: ${avg.toFixed(1)} • <span style="color: ${trendColor}">${trendSymbol}${Math.abs(trend)}</span>
+        </div>
       </div>
     `;
-  }
+  }).join('');
   
-  const ctx = document.getElementById('player-progress-chart').getContext('2d');
+  if (statsContainer) statsContainer.innerHTML = statsHtml;
   
-  if (chartInstances.playerProgress) chartInstances.playerProgress.destroy();
+  const ctx = document.getElementById('player-metrics-chart').getContext('2d');
+  if (chartInstance) chartInstance.destroy();
   
-  const gradient = ctx.createLinearGradient(0, 0, 0, 300);
-  gradient.addColorStop(0, 'rgba(0, 212, 170, 0.4)');
-  gradient.addColorStop(1, 'rgba(0, 212, 170, 0)');
-  
-  chartInstances.playerProgress = new Chart(ctx, {
+  chartInstance = new Chart(ctx, {
     type: 'line',
-    data: {
-      labels: labels,
-      datasets: [{
-        label: metricLabels[metric],
-        data: values,
-        borderColor: '#00d4aa',
-        backgroundColor: gradient,
-        borderWidth: 3,
-        fill: true,
-        tension: 0.4,
-        pointBackgroundColor: '#00d4aa',
-        pointBorderColor: '#0f1923',
-        pointBorderWidth: 2,
-        pointRadius: 5,
-        pointHoverRadius: 8
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: '#1a2733',
-          titleColor: '#e8e8e8',
-          bodyColor: '#00d4aa',
-          borderColor: '#3a4a5a',
-          borderWidth: 1,
-          padding: 10,
-          callbacks: {
-            title: (items) => {
-              const idx = items[0].dataIndex;
-              return `${data[idx].date} • ${data[idx].time}`;
-            },
-            label: (item) => `${metricLabels[metric]}: ${item.raw}`
-          }
-        }
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          grid: { color: 'rgba(42, 58, 74, 0.5)' },
-          ticks: { color: '#8899aa' }
-        },
-        x: {
-          grid: { display: false },
-          ticks: { color: '#8899aa' }
-        }
-      }
-    }
-  });
-}
-
-// ГРАФИК 2: Сравнение нескольких игроков (несколько линий)
-function updateCompareChart() {
-  const metric = document.getElementById('compare-metric-select').value;
-  
-  if (selectedComparePlayers.length === 0) {
-    if (chartInstances.playersCompare) {
-      chartInstances.playersCompare.destroy();
-      chartInstances.playersCompare = null;
-    }
-    return;
-  }
-  
-  // Собираем данные всех выбранных игроков
-  const allPlayers = getAllPlayersFromHistory();
-  const playerInfoMap = new Map();
-  allPlayers.forEach(p => playerInfoMap.set(p.key, p));
-  
-  // Определяем все даты матчей в периоде
-  const filteredMatches = getMatchesByPeriod(currentPeriod);
-  const labels = filteredMatches.map((m, i) => {
-    const date = new Date(m.date);
-    return `${date.getDate()}.${String(date.getMonth()+1).padStart(2,'0')}`;
-  });
-  
-  const datasets = selectedComparePlayers.map((playerKey, idx) => {
-    const data = getPlayerPeriodData(playerKey, currentPeriod);
-    const info = playerInfoMap.get(playerKey);
-    const label = info ? `#${info.number||'—'} ${info.name}` : playerKey;
-    
-    // Выстраиваем значения по всем матчам (если игрок не играл в матче — null)
-    const values = filteredMatches.map((match, matchIdx) => {
-      const playerData = data.find(d => d.date === match.date && d.time === match.time);
-      return playerData ? playerData[metric] : null;
-    });
-    
-    return {
-      label: label,
-      data: values,
-      borderColor: CHART_COLORS[idx % CHART_COLORS.length],
-      backgroundColor: CHART_COLORS[idx % CHART_COLORS.length] + '30',
-      borderWidth: 3,
-      fill: false,
-      tension: 0.4,
-      pointBackgroundColor: CHART_COLORS[idx % CHART_COLORS.length],
-      pointBorderColor: '#0f1923',
-      pointBorderWidth: 2,
-      pointRadius: 4,
-      pointHoverRadius: 7,
-      spanGaps: false
-    };
-  });
-  
-  const metricLabels = {
-    points: 'Очки', aces: 'Эйсы', blocks: 'Блоки', attacks: 'Атаки', kr: 'КР'
-  };
-  
-  const ctx = document.getElementById('players-compare-chart').getContext('2d');
-  
-  if (chartInstances.playersCompare) chartInstances.playersCompare.destroy();
-  
-  chartInstances.playersCompare = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: labels,
-      datasets: datasets
-    },
+    data: { labels: labels, datasets: datasets },
     options: {
       responsive: true,
       maintainAspectRatio: false,
@@ -1773,12 +1401,17 @@ function updateCompareChart() {
       },
       plugins: {
         legend: {
+          display: true,
           position: 'top',
+          align: 'end',
           labels: {
             color: '#e8e8e8',
-            padding: 10,
-            font: { size: 11 },
-            boxWidth: 12
+            padding: 12,
+            font: { size: 11, weight: '600' },
+            boxWidth: 14,
+            boxHeight: 3,
+            useBorderRadius: true,
+            borderRadius: 2
           }
         },
         tooltip: {
@@ -1787,120 +1420,19 @@ function updateCompareChart() {
           bodyColor: '#00d4aa',
           borderColor: '#3a4a5a',
           borderWidth: 1,
+          padding: 12,
+          titleFont: { size: 13, weight: '700' },
+          bodyFont: { size: 12 },
           callbacks: {
             title: (items) => {
               if (items.length > 0) {
-                const matchIdx = items[0].dataIndex;
-                const match = filteredMatches[matchIdx];
-                return match ? `${match.date} • Матч ${matchIdx + 1}` : '';
+                const idx = items[0].dataIndex;
+                return `📅 ${data[idx].date} • ${data[idx].time}`;
               }
               return '';
             },
-            label: (item) => `${item.dataset.label}: ${item.raw !== null ? item.raw : '—'}`
-          }
-        }
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          grid: { color: 'rgba(42, 58, 74, 0.5)' },
-          ticks: { color: '#8899aa' },
-          title: {
-            display: true,
-            text: metricLabels[metric],
-            color: '#8899aa'
-          }
-        },
-        x: {
-          grid: { display: false },
-          ticks: { color: '#8899aa', maxRotation: 45 }
-        }
-      }
-    }
-  });
-}
-
-// ГРАФИК 3: Все метрики одного игрока
-function updateMetricsChart() {
-  const playerKey = document.getElementById('metrics-player-select').value;
-  
-  if (!playerKey) {
-    if (chartInstances.playerMetrics) {
-      chartInstances.playerMetrics.destroy();
-      chartInstances.playerMetrics = null;
-    }
-    return;
-  }
-  
-  const data = getPlayerPeriodData(playerKey, currentPeriod);
-  if (data.length === 0) return;
-  
-  const labels = data.map(d => {
-    const date = new Date(d.date);
-    return `${date.getDate()}.${String(date.getMonth()+1).padStart(2,'0')}`;
-  });
-  
-  // Метрики для отображения (только позитивные, чтобы не было путаницы)
-  const metricsToShow = [
-    { key: 'points', label: '⭐ Очки', color: '#00d4aa' },
-    { key: 'attacks', label: '💥 Атаки', color: '#f5c518' },
-    { key: 'aces', label: '🎯 Эйсы', color: '#2980b9' },
-    { key: 'blocks', label: '🧱 Блоки', color: '#e74c3c' },
-    { key: 'kr', label: '🏆 КР', color: '#9b59b6' }
-  ];
-  
-  const datasets = metricsToShow.map(m => ({
-    label: m.label,
-    data: data.map(d => d[m.key]),
-    borderColor: m.color,
-    backgroundColor: m.color + '20',
-    borderWidth: 2,
-    fill: false,
-    tension: 0.4,
-    pointRadius: 3,
-    pointHoverRadius: 6,
-    pointBackgroundColor: m.color,
-    pointBorderColor: '#0f1923',
-    pointBorderWidth: 2
-  }));
-  
-  const ctx = document.getElementById('player-metrics-chart').getContext('2d');
-  
-  if (chartInstances.playerMetrics) chartInstances.playerMetrics.destroy();
-  
-  chartInstances.playerMetrics = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: labels,
-      datasets: datasets
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: {
-        mode: 'index',
-        intersect: false
-      },
-      plugins: {
-        legend: {
-          position: 'top',
-          labels: {
-            color: '#e8e8e8',
-            padding: 8,
-            font: { size: 11 },
-            boxWidth: 12
-          }
-        },
-        tooltip: {
-          backgroundColor: '#1a2733',
-          titleColor: '#e8e8e8',
-          bodyColor: '#00d4aa',
-          borderColor: '#3a4a5a',
-          borderWidth: 1,
-          callbacks: {
-            title: (items) => {
-              const idx = items[0].dataIndex;
-              return `${data[idx].date} • ${data[idx].time}`;
+            label: (item) => {
+              return `  ${item.dataset.label}: ${item.raw}`;
             }
           }
         }
@@ -1925,14 +1457,13 @@ function updateMetricsChart() {
 // ============================================
 function getSeasonPlayersStats() {
   const playersMap = new Map();
-  
   state.matchHistory.forEach(match => {
     ['yellow', 'blue'].forEach(team => {
       match.teams[team].players.forEach(p => {
         const key = p.rosterId || p.name;
         if (!playersMap.has(key)) {
           playersMap.set(key, {
-            key: key, name: p.name, number: p.number,
+            key, name: p.name, number: p.number,
             matches: 0, points: 0, aces: 0, blocks: 0, attacks: 0,
             outs: 0, serviceErrors: 0, receptions: 0, assists: 0, kr: 0
           });
@@ -1953,73 +1484,42 @@ function getSeasonPlayersStats() {
       });
     });
   });
-  
   return Array.from(playersMap.values());
 }
 
 function exportToExcel() {
   if (state.matchHistory.length === 0) { toast('Нет матчей для экспорта'); return; }
-  
   try {
     const wb = XLSX.utils.book_new();
-    
     const playersStats = getSeasonPlayersStats();
-    const playersData = [
-      ['Игрок', '№', 'Матчей', 'Очки', 'Эйсы', 'Блоки', 'Атаки', 'Приём', 'Передачи', 'Ауты', 'Ошибки', 'КР']
-    ];
+    const playersData = [['Игрок', '№', 'Матчей', 'Очки', 'Эйсы', 'Блоки', 'Атаки', 'Приём', 'Передачи', 'Ауты', 'Ошибки', 'КР']];
     playersStats.forEach(p => {
-      playersData.push([
-        p.name, p.number || '', p.matches,
-        p.points, p.aces, p.blocks, p.attacks,
-        p.receptions, p.assists, p.outs, p.serviceErrors,
-        Math.round(p.kr * 10) / 10
-      ]);
+      playersData.push([p.name, p.number || '', p.matches, p.points, p.aces, p.blocks, p.attacks, p.receptions, p.assists, p.outs, p.serviceErrors, Math.round(p.kr * 10) / 10]);
     });
     const ws1 = XLSX.utils.aoa_to_sheet(playersData);
-    ws1['!cols'] = [
-      {wch: 20}, {wch: 5}, {wch: 8}, {wch: 8}, {wch: 8}, {wch: 8},
-      {wch: 8}, {wch: 8}, {wch: 10}, {wch: 8}, {wch: 8}, {wch: 8}
-    ];
+    ws1['!cols'] = [{wch:20},{wch:5},{wch:8},{wch:8},{wch:8},{wch:8},{wch:8},{wch:8},{wch:10},{wch:8},{wch:8},{wch:8}];
     XLSX.utils.book_append_sheet(wb, ws1, 'Игроки за сезон');
     
     const matchesData = [['№', 'Дата', 'Время', 'Счёт Жёлтая', 'Счёт Синяя', 'MVP', 'Сеты']];
     state.matchHistory.forEach((m, i) => {
       const setsStr = m.sets.map((s, j) => `Сет${j+1}: ${s.y}-${s.b}`).join('; ');
-      matchesData.push([
-        i + 1, m.date, m.time,
-        m.score.yellow, m.score.blue,
-        m.mvp ? `${m.mvp.name} (${m.mvp.score})` : '',
-        setsStr
-      ]);
+      matchesData.push([i+1, m.date, m.time, m.score.yellow, m.score.blue, m.mvp ? `${m.mvp.name} (${m.mvp.score})` : '', setsStr]);
     });
     const ws2 = XLSX.utils.aoa_to_sheet(matchesData);
-    ws2['!cols'] = [{wch: 5}, {wch: 12}, {wch: 8}, {wch: 12}, {wch: 12}, {wch: 25}, {wch: 40}];
+    ws2['!cols'] = [{wch:5},{wch:12},{wch:8},{wch:12},{wch:12},{wch:25},{wch:40}];
     XLSX.utils.book_append_sheet(wb, ws2, 'История матчей');
     
     const detailedData = [['Матч', 'Дата', 'Команда', 'Игрок', '№', 'Очки', 'Эйсы', 'Блоки', 'Атаки', 'Приём', 'Передачи', 'Ауты', 'Ошибки', 'КР']];
     state.matchHistory.forEach((m, matchIdx) => {
       ['yellow', 'blue'].forEach(team => {
         m.teams[team].players.forEach(p => {
-          const kr = (p.stats.points||0) + (p.stats.aces||0) + (p.stats.blocks||0) + 
-                     (p.stats.attacks||0) + (p.stats.assists||0) + (p.stats.receptions||0) - 
-                     (p.stats.outs||0) - (p.stats.serviceErrors||0);
-          detailedData.push([
-            matchIdx + 1, m.date,
-            team === 'yellow' ? 'Жёлтая' : 'Синяя',
-            p.name, p.number || '',
-            p.stats.points || 0, p.stats.aces || 0, p.stats.blocks || 0,
-            p.stats.attacks || 0, p.stats.receptions || 0, p.stats.assists || 0,
-            p.stats.outs || 0, p.stats.serviceErrors || 0, kr
-          ]);
+          const kr = (p.stats.points||0) + (p.stats.aces||0) + (p.stats.blocks||0) + (p.stats.attacks||0) + (p.stats.assists||0) + (p.stats.receptions||0) - (p.stats.outs||0) - (p.stats.serviceErrors||0);
+          detailedData.push([matchIdx+1, m.date, team==='yellow'?'Жёлтая':'Синяя', p.name, p.number||'', p.stats.points||0, p.stats.aces||0, p.stats.blocks||0, p.stats.attacks||0, p.stats.receptions||0, p.stats.assists||0, p.stats.outs||0, p.stats.serviceErrors||0, kr]);
         });
       });
     });
     const ws3 = XLSX.utils.aoa_to_sheet(detailedData);
-    ws3['!cols'] = [
-      {wch: 6}, {wch: 12}, {wch: 10}, {wch: 20}, {wch: 5},
-      {wch: 7}, {wch: 7}, {wch: 7}, {wch: 7}, {wch: 7},
-      {wch: 9}, {wch: 7}, {wch: 8}, {wch: 7}
-    ];
+    ws3['!cols'] = [{wch:6},{wch:12},{wch:10},{wch:20},{wch:5},{wch:7},{wch:7},{wch:7},{wch:7},{wch:7},{wch:9},{wch:7},{wch:8},{wch:7}];
     XLSX.utils.book_append_sheet(wb, ws3, 'Детально по матчам');
     
     const dateStr = new Date().toISOString().split('T')[0];
@@ -2033,42 +1533,26 @@ function exportToExcel() {
 
 function exportToCSV() {
   if (state.matchHistory.length === 0) { toast('Нет матчей для экспорта'); return; }
-  
   try {
     const playersStats = getSeasonPlayersStats();
-    
     let csv = 'Игрок;№;Матчей;Очки;Эйсы;Блоки;Атаки;Приём;Передачи;Ауты;Ошибки;КР\n';
-    
     playersStats.forEach(p => {
-      csv += [
-        p.name, p.number || '', p.matches,
-        p.points, p.aces, p.blocks, p.attacks,
-        p.receptions, p.assists, p.outs, p.serviceErrors,
-        Math.round(p.kr * 10) / 10
-      ].join(';') + '\n';
+      csv += [p.name, p.number||'', p.matches, p.points, p.aces, p.blocks, p.attacks, p.receptions, p.assists, p.outs, p.serviceErrors, Math.round(p.kr*10)/10].join(';') + '\n';
     });
-    
     csv += '\n\nИстория матчей\n';
     csv += '№;Дата;Время;Счёт Жёлтая;Счёт Синяя;MVP\n';
     state.matchHistory.forEach((m, i) => {
-      csv += [
-        i + 1, m.date, m.time,
-        m.score.yellow, m.score.blue,
-        m.mvp ? `${m.mvp.name} (${m.mvp.score})` : ''
-      ].join(';') + '\n';
+      csv += [i+1, m.date, m.time, m.score.yellow, m.score.blue, m.mvp ? `${m.mvp.name} (${m.mvp.score})` : ''].join(';') + '\n';
     });
-    
     const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    const dateStr = new Date().toISOString().split('T')[0];
-    a.download = `volleyball-stats-${dateStr}.csv`;
+    a.download = `volleyball-stats-${new Date().toISOString().split('T')[0]}.csv`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-    
     toast('CSV-файл сохранён!');
   } catch (err) {
     console.error(err);
@@ -2077,65 +1561,45 @@ function exportToCSV() {
 }
 
 function exportBackup() {
-  const backupData = {
-    version: '1.0',
-    exportDate: new Date().toISOString(),
-    data: state
-  };
-  
+  const backupData = { version: '1.0', exportDate: new Date().toISOString(), data: state };
   const jsonStr = JSON.stringify(backupData, null, 2);
   const blob = new Blob([jsonStr], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
-  
   const a = document.createElement('a');
   a.href = url;
-  const dateStr = new Date().toISOString().split('T')[0];
-  a.download = `volleyball-backup-${dateStr}.json`;
+  a.download = `volleyball-backup-${new Date().toISOString().split('T')[0]}.json`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
-  
   toast('Резервная копия сохранена!');
 }
 
 function importBackup(event) {
   const file = event.target.files[0];
   if (!file) return;
-  
   const reader = new FileReader();
   reader.onload = function(e) {
     try {
       const backupData = JSON.parse(e.target.result);
-      
-      if (!backupData.data || !backupData.data.roster) {
-        throw new Error('Неверный формат файла');
-      }
-      
+      if (!backupData.data || !backupData.data.roster) throw new Error('Неверный формат файла');
       if (!confirm('Восстановить данные из файла? Текущие данные будут заменены.')) return;
-      
       state = backupData.data;
       if (!state.matchHistory) state.matchHistory = [];
       if (!state.lastLineup) state.lastLineup = null;
-      
       document.getElementById('score-yellow').textContent = state.score.yellow;
       document.getElementById('score-blue').textContent = state.score.blue;
-      
       renderRoster(); updateSelects();
       renderPlayers('yellow'); renderPlayers('blue');
       renderRestoreButtons();
-      
       save();
       toast('Данные восстановлены!');
-      
       setTimeout(() => location.reload(), 1000);
-      
     } catch (err) {
       console.error(err);
       toast('Ошибка: неверный формат файла');
     }
   };
-  
   reader.readAsText(file);
   event.target.value = '';
 }
@@ -2144,33 +1608,26 @@ function renderReports() {
   const c = document.getElementById('reports-content');
   const today = new Date().toISOString().split('T')[0];
   const todayMatches = state.matchHistory.filter(m => m.date === today);
-  
   let h = `
     <div class="backup-section">
       <h3>💾 Резервное копирование</h3>
       <p>Сохраняйте данные после каждой игры, чтобы не потерять статистику и базу игроков.</p>
       <div class="backup-buttons">
-        <button class="btn-backup" onclick="exportBackup()">
-          <span>📥</span><span>Скачать копию</span>
-        </button>
+        <button class="btn-backup" onclick="exportBackup()"><span>📥</span><span>Скачать копию</span></button>
         <div class="file-input-wrapper">
-          <button class="btn-restore">
-            <span>📂</span><span>Загрузить из файла</span>
-          </button>
+          <button class="btn-restore"><span>📂</span><span>Загрузить из файла</span></button>
           <input type="file" accept=".json" onchange="importBackup(event)">
         </div>
       </div>
     </div>
-    
     <div class="reports-header">
-    <h2>📸 Экспорт отчёта</h2>
-    <div class="date">${formatDate(today)} • ${todayMatches.length} матч(ей)</div>
-    <div class="reports-buttons">
-      <button class="btn-detailed" onclick="exportDetailed()" ${todayMatches.length===0?'disabled':''}>📄 Подробный</button>
-      <button class="btn-brief" onclick="exportBrief()" ${todayMatches.length===0?'disabled':''}>⚡ Краткий</button>
-    </div>
-  </div>`;
-
+      <h2>📸 Экспорт отчёта</h2>
+      <div class="date">${formatDate(today)} • ${todayMatches.length} матч(ей)</div>
+      <div class="reports-buttons">
+        <button class="btn-detailed" onclick="exportDetailed()" ${todayMatches.length===0?'disabled':''}>📄 Подробный</button>
+        <button class="btn-brief" onclick="exportBrief()" ${todayMatches.length===0?'disabled':''}>⚡ Краткий</button>
+      </div>
+    </div>`;
   if (todayMatches.length === 0) {
     h += '<div class="empty-msg">Матчей за сегодня нет.<br>Завершите матч кнопкой «✅ Завершить матч».</div>';
   } else {
@@ -2201,63 +1658,38 @@ async function exportDetailed() {
   const today = new Date().toISOString().split('T')[0];
   const matches = state.matchHistory.filter(m => m.date === today);
   if (matches.length === 0) { toast('Нет матчей за сегодня'); return; }
-
   showLoading(true);
   await loadHtml2Canvas();
-
   const template = document.getElementById('detailed-template');
   template.innerHTML = buildDetailedHTML(matches, today);
-  template.style.left = '0';
-  template.style.top = '0';
-  template.style.zIndex = '-1';
-
+  template.style.left = '0'; template.style.top = '0'; template.style.zIndex = '-1';
   try {
     await new Promise(r => setTimeout(r, 100));
-    const canvas = await html2canvas(template, {
-      backgroundColor: '#0f1923', scale: 1, useCORS: true, logging: false
-    });
+    const canvas = await html2canvas(template, { backgroundColor: '#0f1923', scale: 1, useCORS: true, logging: false });
     showPreview(canvas, `volleyball-detailed-${today}.png`, '📄 Подробный отчёт');
-  } catch (e) {
-    console.error(e);
-    toast('Ошибка генерации');
-  } finally {
-    template.style.left = '-99999px';
-    showLoading(false);
-  }
+  } catch (e) { console.error(e); toast('Ошибка генерации'); }
+  finally { template.style.left = '-99999px'; showLoading(false); }
 }
 
 async function exportBrief() {
   const today = new Date().toISOString().split('T')[0];
   const matches = state.matchHistory.filter(m => m.date === today);
   if (matches.length === 0) { toast('Нет матчей за сегодня'); return; }
-
   showLoading(true);
   await loadHtml2Canvas();
-
   const template = document.getElementById('brief-template');
   template.innerHTML = buildBriefHTML(matches, today);
-  template.style.left = '0';
-  template.style.top = '0';
-  template.style.zIndex = '-1';
-
+  template.style.left = '0'; template.style.top = '0'; template.style.zIndex = '-1';
   try {
     await new Promise(r => setTimeout(r, 100));
-    const canvas = await html2canvas(template, {
-      backgroundColor: '#0f1923', scale: 1, useCORS: true, logging: false
-    });
+    const canvas = await html2canvas(template, { backgroundColor: '#0f1923', scale: 1, useCORS: true, logging: false });
     showPreview(canvas, `volleyball-brief-${today}.png`, '⚡ Краткий отчёт');
-  } catch (e) {
-    console.error(e);
-    toast('Ошибка генерации');
-  } finally {
-    template.style.left = '-99999px';
-    showLoading(false);
-  }
+  } catch (e) { console.error(e); toast('Ошибка генерации'); }
+  finally { template.style.left = '-99999px'; showLoading(false); }
 }
 
 function showPreview(canvas, filename, title) {
-  currentCanvas = canvas;
-  currentFilename = filename;
+  currentCanvas = canvas; currentFilename = filename;
   const img = document.getElementById('preview-image');
   img.src = canvas.toDataURL('image/png');
   document.getElementById('preview-title').textContent = title;
@@ -2266,43 +1698,15 @@ function showPreview(canvas, filename, title) {
 
 function closePreview() {
   document.getElementById('preview-modal').classList.remove('show');
-  currentCanvas = null;
-  currentFilename = '';
+  currentCanvas = null; currentFilename = '';
 }
 
 function saveImage() {
   if (!currentCanvas) return;
-  
   const dataUrl = currentCanvas.toDataURL('image/png');
   const newWindow = window.open('', '_blank');
-  
   if (newWindow) {
-    newWindow.document.write(`
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title>Сохранение изображения</title>
-          <meta name="viewport" content="width=device-width, initial-scale=1">
-          <style>
-            * { margin: 0; padding: 0; box-sizing: border-box; }
-            body { background: #000; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, sans-serif; color: #fff; }
-            img { max-width: 100%; height: auto; border-radius: 8px; }
-            .hint { margin-top: 30px; padding: 20px; background: #1a2733; border-radius: 12px; text-align: center; font-size: 16px; line-height: 1.6; max-width: 400px; }
-            .hint strong { color: #00d4aa; display: block; margin-bottom: 10px; font-size: 18px; }
-            .hint .step { margin: 10px 0; }
-            .hint .emoji { font-size: 24px; margin-right: 8px; }
-          </style>
-        </head>
-        <body>
-          <img src="${dataUrl}" alt="Отчёт">
-          <div class="hint">
-            <strong>Как сохранить изображение:</strong>
-            <div class="step"><span class="emoji">👆</span> Зажмите палец на изображении</div>
-            <div class="step"><span class="emoji">📥</span> Выберите «Сохранить в Фото»</div>
-          </div>
-        </body>
-      </html>
-    `);
+    newWindow.document.write(`<!DOCTYPE html><html><head><title>Сохранение</title><meta name="viewport" content="width=device-width, initial-scale=1"><style>*{margin:0;padding:0;box-sizing:border-box}body{background:#000;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;font-family:-apple-system,sans-serif;color:#fff}img{max-width:100%;height:auto;border-radius:8px}.hint{margin-top:30px;padding:20px;background:#1a2733;border-radius:12px;text-align:center;font-size:16px;line-height:1.6;max-width:400px}.hint strong{color:#00d4aa;display:block;margin-bottom:10px;font-size:18px}.hint .step{margin:10px 0}.hint .emoji{font-size:24px;margin-right:8px}</style></head><body><img src="${dataUrl}" alt="Отчёт"><div class="hint"><strong>Как сохранить изображение:</strong><div class="step"><span class="emoji">👆</span> Зажмите палец на изображении</div><div class="step"><span class="emoji">📥</span> Выберите «Сохранить в Фото»</div></div></body></html>`);
     newWindow.document.close();
     toast('Зажмите картинку для сохранения');
   } else {
@@ -2312,25 +1716,15 @@ function saveImage() {
 
 function shareImage() {
   if (!currentCanvas) return;
-  
   currentCanvas.toBlob(async (blob) => {
     if (!blob) { toast('Не удалось подготовить изображение'); return; }
-    
     const file = new File([blob], currentFilename, { type: 'image/png' });
-    
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
       try {
-        await navigator.share({
-          files: [file],
-          title: 'Волейбольная статистика',
-          text: 'Отчёт по матчу'
-        });
+        await navigator.share({ files: [file], title: 'Волейбольная статистика', text: 'Отчёт по матчу' });
         toast('Отправлено!');
       } catch (err) {
-        if (err.name !== 'AbortError') {
-          console.error(err);
-          toast('Ошибка отправки');
-        }
+        if (err.name !== 'AbortError') { console.error(err); toast('Ошибка отправки'); }
       }
     } else {
       toast('Поделиться не поддерживается. Используйте «Сохранить»');
@@ -2344,44 +1738,23 @@ function buildDetailedHTML(matches, date) {
     m.teams.yellow.players.forEach(p => totalPlayers.add(p.rosterId || p.name));
     m.teams.blue.players.forEach(p => totalPlayers.add(p.rosterId || p.name));
   });
-
-  let h = `<div class="rpt-header">
-    <div class="rpt-date">${formatDate(date)}</div>
-    <div class="rpt-title">🏐 Подробный отчёт</div>
-    <div class="rpt-subtitle">${matches.length} матч(ов) • ${totalPlayers.size} игроков</div>
-  </div><div class="rpt-matches">`;
-
+  let h = `<div class="rpt-header"><div class="rpt-date">${formatDate(date)}</div><div class="rpt-title">🏐 Подробный отчёт</div><div class="rpt-subtitle">${matches.length} матч(ов) • ${totalPlayers.size} игроков</div></div><div class="rpt-matches">`;
   matches.forEach((m, idx) => {
-    h += `<div class="rpt-match">
-      <div class="rpt-match-header"><div class="rpt-match-result">Матч ${idx+1} из ${matches.length}</div></div>
-      <div class="rpt-scoreboard">
-        <div class="rpt-team yellow"><div class="t-label">🟡 Жёлтая</div><div class="t-score">${m.score.yellow}</div></div>
-        <div class="rpt-vs">:</div>
-        <div class="rpt-team blue"><div class="t-label">🔵 Синяя</div><div class="t-score">${m.score.blue}</div></div>
-      </div>`;
-    
+    h += `<div class="rpt-match"><div class="rpt-match-header"><div class="rpt-match-result">Матч ${idx+1} из ${matches.length}</div></div><div class="rpt-scoreboard"><div class="rpt-team yellow"><div class="t-label">🟡 Жёлтая</div><div class="t-score">${m.score.yellow}</div></div><div class="rpt-vs">:</div><div class="rpt-team blue"><div class="t-label">🔵 Синяя</div><div class="t-score">${m.score.blue}</div></div></div>`;
     if (m.sets && m.sets.length > 0) {
       h += '<div class="rpt-sets">';
       m.sets.forEach((s, i) => h += `<div class="rpt-set">Сет ${i+1}: ${s.y}:${s.b}</div>`);
       h += '</div>';
     }
-
     if (m.mvp) {
       const st = m.mvp.stats;
-      h += `<div class="rpt-mvp">
-        <div class="rpt-mvp-label">🏆 MVP матча</div>
-        <div class="rpt-mvp-name">#${m.mvp.number||'—'} ${esc(m.mvp.name)}</div>
-        <div class="rpt-mvp-stats">⭐ ${st.points} очков • 🎯 ${st.aces} эйсов • 🧱 ${st.blocks} блоков • КР: ${m.mvp.score}</div>
-      </div>`;
+      h += `<div class="rpt-mvp"><div class="rpt-mvp-label">🏆 MVP матча</div><div class="rpt-mvp-name">#${m.mvp.number||'—'} ${esc(m.mvp.name)}</div><div class="rpt-mvp-stats">⭐ ${st.points} очков • 🎯 ${st.aces} эйсов • 🧱 ${st.blocks} блоков • КР: ${m.mvp.score}</div></div>`;
     }
-
     h += '<table class="rpt-stats"><thead><tr><th>Игрок</th><th>⭐</th><th>🎯</th><th>🧱</th><th>💥</th><th>🤲</th><th>КР</th></tr></thead><tbody>';
-    
     ['yellow', 'blue'].forEach(team => {
       const tt = {};
       STAT_DEFS.forEach(s => tt[s.key] = 0);
       m.teams[team].players.forEach(p => STAT_DEFS.forEach(s => tt[s.key] += p.stats[s.key] || 0));
-      
       m.teams[team].players.forEach(p => {
         const pct = (k) => (tt[k]||0) > 0 ? Math.round((p.stats[k]/tt[k])*100) : 0;
         h += `<tr><td>#${p.number||'—'} ${esc(p.name)}</td>`;
@@ -2396,49 +1769,20 @@ function buildDetailedHTML(matches, date) {
     });
     h += '</tbody></table></div>';
   });
-
   h += '</div>';
-
   const totalSets = { y: 0, b: 0 };
   let uniqueMvps = new Set();
-  matches.forEach(m => {
-    m.sets.forEach(s => { totalSets.y += s.y; totalSets.b += s.b; });
-    if (m.mvp) uniqueMvps.add(m.mvp.name);
-  });
-
-  h += `<div class="rpt-footer">
-    <div class="rpt-footer-stats">
-      <div><div class="rpt-fs-val">${matches.length}</div><div class="rpt-fs-lbl">Матча</div></div>
-      <div><div class="rpt-fs-val">${totalSets.y}:${totalSets.b}</div><div class="rpt-fs-lbl">Сеты</div></div>
-      <div><div class="rpt-fs-val">${uniqueMvps.size}</div><div class="rpt-fs-lbl">MVP</div></div>
-      <div><div class="rpt-fs-val">${totalPlayers.size}</div><div class="rpt-fs-lbl">Игроков</div></div>
-    </div>
-    <div class="rpt-brand">Создано в <strong>🏐 Волейбол: Статистика</strong></div>
-  </div>`;
+  matches.forEach(m => { m.sets.forEach(s => { totalSets.y += s.y; totalSets.b += s.b; }); if (m.mvp) uniqueMvps.add(m.mvp.name); });
+  h += `<div class="rpt-footer"><div class="rpt-footer-stats"><div><div class="rpt-fs-val">${matches.length}</div><div class="rpt-fs-lbl">Матча</div></div><div><div class="rpt-fs-val">${totalSets.y}:${totalSets.b}</div><div class="rpt-fs-lbl">Сеты</div></div><div><div class="rpt-fs-val">${uniqueMvps.size}</div><div class="rpt-fs-lbl">MVP</div></div><div><div class="rpt-fs-val">${totalPlayers.size}</div><div class="rpt-fs-lbl">Игроков</div></div></div><div class="rpt-brand">Создано в <strong>🏐 Волейбол: Статистика</strong></div></div>`;
   return h;
 }
 
 function buildBriefHTML(matches, date) {
-  let h = `<div class="rpt-header">
-    <div class="rpt-date">${formatDate(date)}</div>
-    <div class="rpt-title">⚡ Краткий отчёт</div>
-  </div><div class="rpt-matches">`;
-
+  let h = `<div class="rpt-header"><div class="rpt-date">${formatDate(date)}</div><div class="rpt-title">⚡ Краткий отчёт</div></div><div class="rpt-matches">`;
   matches.forEach((m, idx) => {
     const winner = m.score.yellow > m.score.blue ? 'yellow' : (m.score.blue > m.score.yellow ? 'blue' : null);
     const resultText = winner === 'yellow' ? '🟡 Победа' : (winner === 'blue' ? '🔵 Победа' : 'Ничья');
-    
-    h += `<div class="brf-match">
-      <div class="brf-header">
-        <div class="brf-num">Матч ${idx+1}</div>
-        <div class="brf-result">${resultText}</div>
-      </div>
-      <div class="brf-score">
-        <div class="brf-team yellow"><div class="bt-label">🟡 Жёлтая</div><div class="bt-score">${m.score.yellow}</div></div>
-        <div class="rpt-vs">:</div>
-        <div class="brf-team blue"><div class="bt-label">🔵 Синяя</div><div class="bt-score">${m.score.blue}</div></div>
-      </div>`;
-    
+    h += `<div class="brf-match"><div class="brf-header"><div class="brf-num">Матч ${idx+1}</div><div class="brf-result">${resultText}</div></div><div class="brf-score"><div class="brf-team yellow"><div class="bt-label">🟡 Жёлтая</div><div class="bt-score">${m.score.yellow}</div></div><div class="rpt-vs">:</div><div class="brf-team blue"><div class="bt-label">🔵 Синяя</div><div class="bt-score">${m.score.blue}</div></div></div>`;
     if (m.sets && m.sets.length > 0) {
       h += '<div class="brf-sets">Сеты: ';
       h += m.sets.map(s => {
@@ -2447,73 +1791,33 @@ function buildBriefHTML(matches, date) {
       }).join(' • ');
       h += '</div>';
     }
-
     if (m.mvp) {
-      h += `<div class="brf-mvp">
-        <div class="brf-mvp-medal">🏆</div>
-        <div>
-          <div class="brf-mvp-label">MVP матча</div>
-          <div class="brf-mvp-name">#${m.mvp.number||'—'} ${esc(m.mvp.name)}</div>
-          <div class="brf-mvp-stats">⭐ ${m.mvp.stats.points} • 🎯 ${m.mvp.stats.aces} • 🧱 ${m.mvp.stats.blocks} • КР ${m.mvp.score}</div>
-        </div>
-      </div>`;
+      h += `<div class="brf-mvp"><div class="brf-mvp-medal">🏆</div><div><div class="brf-mvp-label">MVP матча</div><div class="brf-mvp-name">#${m.mvp.number||'—'} ${esc(m.mvp.name)}</div><div class="brf-mvp-stats">⭐ ${m.mvp.stats.points} • 🎯 ${m.mvp.stats.aces} • 🧱 ${m.mvp.stats.blocks} • КР ${m.mvp.score}</div></div></div>`;
     }
-
     const yt = {}, bt = {};
     ['points','aces','blocks','attacks','assists','receptions','outs','serviceErrors'].forEach(k => { yt[k]=0; bt[k]=0; });
     m.teams.yellow.players.forEach(p => Object.keys(yt).forEach(k => yt[k] += p.stats[k]||0));
     m.teams.blue.players.forEach(p => Object.keys(bt).forEach(k => bt[k] += p.stats[k]||0));
-
     const yKR = Object.keys(MVP_WEIGHTS).reduce((s,k)=>s+(yt[k]||0)*MVP_WEIGHTS[k],0);
     const bKR = Object.keys(MVP_WEIGHTS).reduce((s,k)=>s+(bt[k]||0)*MVP_WEIGHTS[k],0);
-
-    const rows = [
-      { l: '⭐ Очки', y: yt.points, b: bt.points },
-      { l: '🎯 Эйсы', y: yt.aces, b: bt.aces },
-      { l: '🧱 Блоки', y: yt.blocks, b: bt.blocks },
-    ];
-
+    const rows = [{ l: '⭐ Очки', y: yt.points, b: bt.points }, { l: '🎯 Эйсы', y: yt.aces, b: bt.aces }, { l: '🧱 Блоки', y: yt.blocks, b: bt.blocks }];
     h += '<div class="brf-compare"><div class="brf-compare-title">Сравнение команд</div>';
     rows.forEach(r => {
       const tot = r.y + r.b;
       const yp = tot>0?(r.y/tot)*100:50;
       const yWin = r.y > r.b, bWin = r.b > r.y;
-      h += `<div class="brf-row">
-        <div class="brf-val yellow ${yWin?'winner':''}">${r.y}</div>
-        <div class="brf-bar"><div class="by" style="width:${yp}%"></div><div class="bb" style="width:${100-yp}%"></div></div>
-        <div class="brf-val blue ${bWin?'winner':''}">${r.b}</div>
-      </div>
-      <div class="brf-row"><div class="brf-lbl" style="grid-column:1/4">${r.l}</div></div>`;
+      h += `<div class="brf-row"><div class="brf-val yellow ${yWin?'winner':''}">${r.y}</div><div class="brf-bar"><div class="by" style="width:${yp}%"></div><div class="bb" style="width:${100-yp}%"></div></div><div class="brf-val blue ${bWin?'winner':''}">${r.b}</div></div><div class="brf-row"><div class="brf-lbl" style="grid-column:1/4">${r.l}</div></div>`;
     });
     const krTot = Math.abs(yKR) + Math.abs(bKR);
     const yKrP = krTot>0?(Math.max(0,yKR)/krTot)*100:50;
-    h += `<div class="brf-row total">
-      <div class="brf-val yellow ${yKR>=bKR?'winner':''}">${Math.round(yKR*10)/10}</div>
-      <div class="brf-bar"><div class="by" style="width:${yKrP}%"></div><div class="bb" style="width:${100-yKrP}%"></div></div>
-      <div class="brf-val blue ${bKR>yKR?'winner':''}">${Math.round(bKR*10)/10}</div>
-    </div>
-    <div class="brf-row total"><div class="brf-lbl" style="grid-column:1/4">🏆 Коэффициент команды</div></div>`;
-    h += '</div></div>';
+    h += `<div class="brf-row total"><div class="brf-val yellow ${yKR>=bKR?'winner':''}">${Math.round(yKR*10)/10}</div><div class="brf-bar"><div class="by" style="width:${yKrP}%"></div><div class="bb" style="width:${100-yKrP}%"></div></div><div class="brf-val blue ${bKR>yKR?'winner':''}">${Math.round(bKR*10)/10}</div></div><div class="brf-row total"><div class="brf-lbl" style="grid-column:1/4">🏆 Коэффициент команды</div></div></div></div>`;
   });
-
   h += '</div>';
-
   let yWins = 0, bWins = 0;
-  matches.forEach(m => {
-    if (m.score.yellow > m.score.blue) yWins++;
-    else if (m.score.blue > m.score.yellow) bWins++;
-  });
+  matches.forEach(m => { if (m.score.yellow > m.score.blue) yWins++; else if (m.score.blue > m.score.yellow) bWins++; });
   const totalSets = { y: 0, b: 0 };
   matches.forEach(m => m.sets.forEach(s => { totalSets.y += s.y; totalSets.b += s.b; }));
-
-  h += `<div class="rpt-footer">
-    <div class="rpt-footer-stats">
-      <div><div class="rpt-fs-val">${matches.length}</div><div class="rpt-fs-lbl">Матча</div></div>
-      <div><div class="rpt-fs-val">${totalSets.y}:${totalSets.b}</div><div class="rpt-fs-lbl">Сеты</div></div>
-      <div><div class="rpt-fs-val">${yWins}:${bWins}</div><div class="rpt-fs-lbl">Победы</div></div>
-    </div>
-    <div class="rpt-brand">Создано в <strong>🏐 Волейбол: Статистика</strong></div>
-  </div>`;
+  h += `<div class="rpt-footer"><div class="rpt-footer-stats"><div><div class="rpt-fs-val">${matches.length}</div><div class="rpt-fs-lbl">Матча</div></div><div><div class="rpt-fs-val">${totalSets.y}:${totalSets.b}</div><div class="rpt-fs-lbl">Сеты</div></div><div><div class="rpt-fs-val">${yWins}:${bWins}</div><div class="rpt-fs-lbl">Победы</div></div></div><div class="rpt-brand">Создано в <strong>🏐 Волейбол: Статистика</strong></div></div>`;
   return h;
 }
 
@@ -2522,24 +1826,19 @@ function loadHtml2Canvas() {
     if (window.html2canvas) { resolve(); return; }
     const s = document.createElement('script');
     s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-    s.onload = resolve;
-    s.onerror = reject;
+    s.onload = resolve; s.onerror = reject;
     document.head.appendChild(s);
   });
 }
 
-function showLoading(show) {
-  document.getElementById('loading-overlay').classList.toggle('show', show);
-}
+function showLoading(show) { document.getElementById('loading-overlay').classList.toggle('show', show); }
 
 function exportData() {
   let t = `🏐 ВОЛЕЙБОЛЬНАЯ СТАТИСТИКА\nСчёт: 🟡 ${state.score.yellow} — ${state.score.blue} 🔵\n\n`;
   const top3 = getMvpTop3();
   if (top3.length > 0 && top3[0].mvpScore > 0) {
     t += `🏆 MVP:\n`;
-    ['🥇','🥈','🥉'].forEach((m,i) => {
-      if (top3[i]) t += `${m} #${top3[i].number||'—'} ${top3[i].name} — ${top3[i].mvpScore}\n`;
-    });
+    ['🥇','🥈','🥉'].forEach((m,i) => { if (top3[i]) t += `${m} #${top3[i].number||'—'} ${top3[i].name} — ${top3[i].mvpScore}\n`; });
     t += '\n';
   }
   ['yellow','blue'].forEach(team => {
@@ -2557,26 +1856,14 @@ function save() {
   if (isSyncing) return;
   isSyncing = true;
   setDoc(doc(db, "app", "state"), state)
-    .then(() => {
-      isSyncing = false;
-      updateSyncStatus('online');
-    })
-    .catch(err => {
-      console.error('Ошибка сохранения:', err);
-      isSyncing = false;
-      updateSyncStatus('offline');
-    });
+    .then(() => { isSyncing = false; updateSyncStatus('online'); })
+    .catch(err => { console.error('Ошибка сохранения:', err); isSyncing = false; updateSyncStatus('offline'); });
 }
 
 function updateSyncStatus(status) {
   const el = document.getElementById('sync-status');
-  if (status === 'online') {
-    el.textContent = '✅ Синхронизировано';
-    el.className = 'sync-status online';
-  } else {
-    el.textContent = '⚠️ Офлайн';
-    el.className = 'sync-status offline';
-  }
+  if (status === 'online') { el.textContent = '✅ Синхронизировано'; el.className = 'sync-status online'; }
+  else { el.textContent = '⚠️ Офлайн'; el.className = 'sync-status offline'; }
 }
 
 function esc(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
@@ -2595,19 +1882,14 @@ onSnapshot(doc(db, "app", "state"), (docSnap) => {
     if (!state.lastLineup) state.lastLineup = null;
     document.getElementById('score-yellow').textContent = state.score.yellow;
     document.getElementById('score-blue').textContent = state.score.blue;
-    renderRoster();
-    updateSelects();
-    renderPlayers('yellow');
-    renderPlayers('blue');
+    renderRoster(); updateSelects();
+    renderPlayers('yellow'); renderPlayers('blue');
     renderRestoreButtons();
     updateSyncStatus('online');
   } else {
     updateSyncStatus('offline');
   }
-}, (error) => {
-  console.error('Ошибка подписки:', error);
-  updateSyncStatus('offline');
-});
+}, (error) => { console.error('Ошибка подписки:', error); updateSyncStatus('offline'); });
 
 window.addToRoster = addToRoster;
 window.removeFromRoster = removeFromRoster;
@@ -2633,10 +1915,7 @@ window.shareImage = shareImage;
 window.exportData = exportData;
 window.restoreLastLineup = restoreLastLineup;
 window.setPeriod = setPeriod;
-window.toggleComparePlayer = toggleComparePlayer;
-window.updatePlayerChart = updatePlayerChart;
-window.updateCompareChart = updateCompareChart;
-window.updateMetricsChart = updateMetricsChart;
+window.updatePlayerMetricsChart = updatePlayerMetricsChart;
 window.exportToExcel = exportToExcel;
 window.exportToCSV = exportToCSV;
 </script>
