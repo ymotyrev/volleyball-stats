@@ -1244,45 +1244,59 @@ function getMatchesByPeriod(period) {
 function getPlayerPeriodData(playerKey, period) {
   const matches = getMatchesByPeriod(period);
   const data = [];
+  
+  // Функция поиска игрока с нечётким сопоставлением
+  const findPlayer = (players) => {
+    return players.find(p => {
+      // Сравниваем как строки — решает проблему с типами из Firebase
+      const pKey = String(p.rosterId || p.name);
+      const searchKey = String(playerKey);
+      return pKey === searchKey || p.name === playerKey;
+    });
+  };
+  
   matches.forEach((match, matchIdx) => {
     let playerStats = null;
-    const yellowPlayer = match.teams.yellow.players.find(p => p.rosterId === playerKey || p.name === playerKey);
+    
+    const yellowPlayer = findPlayer(match.teams.yellow.players);
     if (yellowPlayer) playerStats = yellowPlayer.stats;
     else {
-      const bluePlayer = match.teams.blue.players.find(p => p.rosterId === playerKey || p.name === playerKey);
+      const bluePlayer = findPlayer(match.teams.blue.players);
       if (bluePlayer) playerStats = bluePlayer.stats;
     }
-    if (playerStats) {
-      const kr = (playerStats.points||0) + (playerStats.aces||0) + (playerStats.blocks||0) + 
-                 (playerStats.attacks||0) + (playerStats.assists||0) + (playerStats.receptions||0) - 
-                 (playerStats.outs||0) - (playerStats.serviceErrors||0);
-      data.push({
-        matchIdx: matchIdx + 1,
-        date: match.date,
-        time: match.time,
-        points: playerStats.points || 0,
-        aces: playerStats.aces || 0,
-        blocks: playerStats.blocks || 0,
-        attacks: playerStats.attacks || 0,
-        kr: kr
-      });
-    }
-  });
-  return data;
-}
 
 function getAllPlayersFromHistory() {
   const playersMap = new Map();
   state.matchHistory.forEach(match => {
     ['yellow', 'blue'].forEach(team => {
       match.teams[team].players.forEach(p => {
-        const key = p.rosterId || p.name;
+        // Используем строку как ключ — это решает проблему с типами
+        const key = String(p.rosterId || p.name);
         if (!playersMap.has(key)) {
-          playersMap.set(key, { key, name: p.name, number: p.number, rosterId: p.rosterId });
+          playersMap.set(key, { 
+            key, 
+            name: p.name, 
+            number: p.number, 
+            rosterId: p.rosterId,
+            matchesCount: 0  // Считаем матчи для автовыбора
+          });
         }
       });
     });
   });
+  
+  // Подсчитываем количество матчей для каждого игрока
+  state.matchHistory.forEach(match => {
+    ['yellow', 'blue'].forEach(team => {
+      match.teams[team].players.forEach(p => {
+        const key = String(p.rosterId || p.name);
+        if (playersMap.has(key)) {
+          playersMap.get(key).matchesCount++;
+        }
+      });
+    });
+  });
+  
   return Array.from(playersMap.values());
 }
 
@@ -1392,13 +1406,31 @@ function initAnalyticsChart() {
   Chart.defaults.borderColor = '#2a3a4a';
   Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
   
+  // Отрисовываем легенду метрик
   renderMetricsLegend();
   
   const playerSelect = document.getElementById('analytics-player-select');
-  if (playerSelect && playerSelect.options.length > 1) {
-    playerSelect.selectedIndex = 1;
-    updatePlayerMetricsChart();
+  if (!playerSelect || playerSelect.options.length <= 1) {
+    console.log('📊 Аналитика: нет игроков для выбора');
+    return;
   }
+  
+  // Находим игрока с наибольшим количеством матчей (для автовыбора)
+  const allPlayers = getAllPlayersFromHistory();
+  if (allPlayers.length === 0) return;
+  
+  const topPlayer = allPlayers.reduce((best, p) => 
+    (p.matchesCount || 0) > (best.matchesCount || 0) ? p : best
+  , allPlayers[0]);
+  
+  // Устанавливаем выбранного игрока
+  playerSelect.value = topPlayer.key;
+  
+  console.log('📊 Аналитика: автовыбор игрока', topPlayer.name, 'ключ:', topPlayer.key);
+  console.log('📊 Всего матчей в истории:', state.matchHistory.length);
+  
+  // Обновляем график
+  updatePlayerMetricsChart();
 }
 
 function renderMetricsLegend() {
@@ -1414,8 +1446,17 @@ function renderMetricsLegend() {
 }
 
 function updatePlayerMetricsChart() {
-  const playerKey = document.getElementById('analytics-player-select').value;
+  const playerSelect = document.getElementById('analytics-player-select');
+  if (!playerSelect) {
+    console.error('❌ Селектор игрока не найден');
+    return;
+  }
+  
+  const playerKey = playerSelect.value;
   const statsContainer = document.getElementById('player-metrics-stats');
+  
+  console.log('🔍 Поиск игрока с ключом:', playerKey);
+  console.log('🔍 Всего матчей:', state.matchHistory.length);
   
   if (!playerKey) {
     if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
@@ -1426,9 +1467,21 @@ function updatePlayerMetricsChart() {
     return;
   }
   
-  const data = getPlayerPeriodData(playerKey, currentPeriod);
+    const data = getPlayerPeriodData(playerKey, currentPeriod);
+  console.log('📊 Найдено матчей для игрока:', data.length);
+  console.log('📊 Данные:', data);
+  
   if (data.length === 0) {
-    if (statsContainer) statsContainer.innerHTML = '<div class="empty-msg">Нет данных за выбранный период</div>';
+    if (statsContainer) {
+      statsContainer.innerHTML = `
+        <div class="empty-msg">
+          Нет данных для этого игрока за выбранный период.<br>
+          <small style="color: var(--text-dim);">
+            Проверьте, что игрок участвовал в матчах за этот период.
+          </small>
+        </div>
+      `;
+    }
     return;
   }
   
