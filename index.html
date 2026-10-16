@@ -89,9 +89,7 @@
     border: 2px dashed var(--accent); border-radius: var(--radius);
     background: linear-gradient(135deg, rgba(0,212,170,0.1) 0%, rgba(0,168,132,0.1) 100%);
     color: var(--accent); font-size: 0.95rem; font-weight: 700; cursor: pointer;
-    transition: all 0.2s;
   }
-  .restore-lineup-btn:hover { background: linear-gradient(135deg, rgba(0,212,170,0.2) 0%, rgba(0,168,132,0.2) 100%); }
   .restore-lineup-btn:active { transform: scale(0.98); }
   .restore-lineup-btn .icon { font-size: 1.3rem; }
   .restore-lineup-btn .info { display: flex; flex-direction: column; align-items: flex-start; text-align: left; }
@@ -228,6 +226,49 @@
   .analytics-header h2 { font-size: 1.3rem; margin-bottom: 5px; }
   .analytics-header .subtitle { color: var(--text-dim); font-size: 0.9rem; }
 
+  /* Общий селектор периода */
+  .period-selector {
+    background: var(--card);
+    border: 1px solid #2a3a4a;
+    border-radius: var(--radius);
+    padding: 15px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .period-selector-label {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+  }
+  .period-buttons {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .period-btn {
+    flex: 1;
+    min-width: 80px;
+    padding: 10px 14px;
+    border: 1px solid #3a4a5a;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .period-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .period-btn.active {
+    background: linear-gradient(135deg, var(--accent), #00a884);
+    color: #000;
+    border-color: var(--accent);
+  }
+
   .analytics-section {
     background: var(--card);
     border: 1px solid #2a3a4a;
@@ -263,21 +304,49 @@
     font-size: 0.9rem;
     outline: none;
   }
-  .chart-controls button {
-    padding: 10px 16px;
-    border: none;
+  
+  /* Множественный выбор игроков */
+  .players-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: rgba(0,0,0,0.2);
     border-radius: 8px;
-    background: var(--accent);
-    color: #000;
-    font-weight: 700;
-    font-size: 0.85rem;
+    max-height: 150px;
+    overflow-y: auto;
+  }
+  .player-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid #3a4a5a;
+    border-radius: 6px;
     cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+  }
+  .player-checkbox:hover { background: rgba(255,255,255,0.1); }
+  .player-checkbox.checked {
+    background: rgba(0, 212, 170, 0.15);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .player-checkbox input { display: none; }
+  .player-checkbox .color-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
   }
 
   .chart-container {
     position: relative;
     width: 100%;
-    height: 280px;
+    height: 300px;
     background: rgba(0,0,0,0.2);
     border-radius: 8px;
     padding: 10px;
@@ -334,21 +403,9 @@
     background: rgba(255,255,255,0.05);
     border-color: var(--accent);
   }
-  .export-card .icon {
-    font-size: 3rem;
-    margin-bottom: 10px;
-  }
-  .export-card h4 {
-    font-size: 1.1rem;
-    margin-bottom: 5px;
-    color: var(--text);
-  }
-  .export-card p {
-    font-size: 0.8rem;
-    color: var(--text-dim);
-    margin-bottom: 15px;
-    line-height: 1.4;
-  }
+  .export-card .icon { font-size: 3rem; margin-bottom: 10px; }
+  .export-card h4 { font-size: 1.1rem; margin-bottom: 5px; color: var(--text); }
+  .export-card p { font-size: 0.8rem; color: var(--text-dim); margin-bottom: 15px; line-height: 1.4; }
   .export-card button {
     width: 100%;
     padding: 12px;
@@ -481,8 +538,9 @@
     .mvp-podium { gap: 4px; }
     .mvp-name { font-size: 0.7rem; }
     .compare-team .ct-score { font-size: 2rem; }
-    .chart-container { height: 240px; }
+    .chart-container { height: 260px; }
     .export-grid { grid-template-columns: 1fr; }
+    .period-btn { min-width: 70px; padding: 8px 10px; font-size: 0.8rem; }
   }
 </style>
 </head>
@@ -582,7 +640,6 @@
     <div id="reports-content"></div>
   </div>
 
-  <!-- ===== НОВАЯ ВКЛАДКА: АНАЛИТИКА ===== -->
   <div class="tab-panel" id="panel-analytics">
     <div id="analytics-content"></div>
   </div>
@@ -629,7 +686,6 @@
 
 <div class="toast" id="toast"></div>
 
-<!-- ВНЕШНИЕ БИБЛИОТЕКИ -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
@@ -665,12 +721,22 @@ let currentCanvas = null;
 let currentFilename = '';
 let isSyncing = false;
 
-// Экземпляры графиков (для корректного перерисовывания)
+// Текущий выбранный период
+let currentPeriod = 'all';
+// Выбранные игроки для сравнения (до 5)
+let selectedComparePlayers = [];
+
 let chartInstances = {
   playerProgress: null,
   playersCompare: null,
-  teamDistribution: null
+  playerMetrics: null
 };
+
+// Цвета для линий графиков
+const CHART_COLORS = [
+  '#00d4aa', '#f5c518', '#2980b9', '#e74c3c', '#9b59b6',
+  '#f39c12', '#1abc9c', '#3498db', '#e67e22', '#16a085'
+];
 
 const STAT_DEFS = [
   { key: 'points', label: 'Очки', icon: '⭐' },
@@ -927,18 +993,14 @@ function saveLastLineup() {
   
   if (yellowLineup.length > 0 || blueLineup.length > 0) {
     state.lastLineup = {
-      yellow: yellowLineup,
-      blue: blueLineup,
+      yellow: yellowLineup, blue: blueLineup,
       savedAt: new Date().toISOString()
     };
   }
 }
 
 function restoreLastLineup() {
-  if (!state.lastLineup) {
-    toast('Нет сохранённого состава');
-    return;
-  }
+  if (!state.lastLineup) { toast('Нет сохранённого состава'); return; }
   
   if (state.teams.yellow.players.length > 0 || state.teams.blue.players.length > 0) {
     if (!confirm('Восстановить последний состав? Текущие команды будут заменены.')) return;
@@ -1165,19 +1227,53 @@ function renderCompare() {
 }
 
 // ============================================
-// АНАЛИТИКА: ГРАФИКИ И ЭКСПОРТ
+// АНАЛИТИКА: ФИЛЬТРАЦИЯ ПО ПЕРИОДУ
 // ============================================
 
-// Агрегация данных игрока по всем матчам
-function getPlayerSeasonData(playerKey) {
-  // playerKey = "rosterId" или "name"
+function getMatchesByPeriod(period) {
+  const now = new Date();
+  let cutoffDate = null;
+  
+  switch (period) {
+    case 'month':
+      cutoffDate = new Date(now);
+      cutoffDate.setMonth(cutoffDate.getMonth() - 1);
+      break;
+    case '3months':
+      cutoffDate = new Date(now);
+      cutoffDate.setMonth(cutoffDate.getMonth() - 3);
+      break;
+    case 'year':
+      cutoffDate = new Date(now);
+      cutoffDate.setFullYear(cutoffDate.getFullYear() - 1);
+      break;
+    case 'all':
+    default:
+      return state.matchHistory;
+  }
+  
+  const cutoffStr = cutoffDate.toISOString().split('T')[0];
+  return state.matchHistory.filter(m => m.date >= cutoffStr);
+}
+
+function getPeriodLabel(period) {
+  const labels = {
+    'all': 'Всё время',
+    'month': 'Месяц',
+    '3months': '3 месяца',
+    'year': 'Год'
+  };
+  return labels[period] || 'Всё время';
+}
+
+function getPlayerPeriodData(playerKey, period) {
+  const matches = getMatchesByPeriod(period);
   const data = [];
   
-  state.matchHistory.forEach((match, matchIdx) => {
+  matches.forEach((match, matchIdx) => {
     let playerStats = null;
     let teamName = null;
     
-    // Ищем в жёлтой команде
     const yellowPlayer = match.teams.yellow.players.find(p => 
       p.rosterId === playerKey || p.name === playerKey
     );
@@ -1185,7 +1281,6 @@ function getPlayerSeasonData(playerKey) {
       playerStats = yellowPlayer.stats;
       teamName = 'yellow';
     } else {
-      // Ищем в синей команде
       const bluePlayer = match.teams.blue.players.find(p => 
         p.rosterId === playerKey || p.name === playerKey
       );
@@ -1220,7 +1315,6 @@ function getPlayerSeasonData(playerKey) {
   return data;
 }
 
-// Получение всех уникальных игроков из истории
 function getAllPlayersFromHistory() {
   const playersMap = new Map();
   
@@ -1243,68 +1337,57 @@ function getAllPlayersFromHistory() {
   return Array.from(playersMap.values());
 }
 
-// Общая статистика всех игроков за сезон
-function getSeasonPlayersStats() {
-  const playersMap = new Map();
-  
-  state.matchHistory.forEach(match => {
-    ['yellow', 'blue'].forEach(team => {
-      match.teams[team].players.forEach(p => {
-        const key = p.rosterId || p.name;
-        if (!playersMap.has(key)) {
-          playersMap.set(key, {
-            key: key,
-            name: p.name,
-            number: p.number,
-            matches: 0,
-            points: 0, aces: 0, blocks: 0, attacks: 0,
-            outs: 0, serviceErrors: 0, receptions: 0, assists: 0,
-            kr: 0
-          });
-        }
-        const stats = playersMap.get(key);
-        stats.matches++;
-        stats.points += p.stats.points || 0;
-        stats.aces += p.stats.aces || 0;
-        stats.blocks += p.stats.blocks || 0;
-        stats.attacks += p.stats.attacks || 0;
-        stats.outs += p.stats.outs || 0;
-        stats.serviceErrors += p.stats.serviceErrors || 0;
-        stats.receptions += p.stats.receptions || 0;
-        stats.assists += p.stats.assists || 0;
-        stats.kr += (p.stats.points||0) + (p.stats.aces||0) + (p.stats.blocks||0) + 
-                    (p.stats.attacks||0) + (p.stats.assists||0) + (p.stats.receptions||0) - 
-                    (p.stats.outs||0) - (p.stats.serviceErrors||0);
-      });
-    });
-  });
-  
-  return Array.from(playersMap.values());
-}
-
-// Отрисовка вкладки "Аналитика"
+// ============================================
+// ОТРИСОВКА ВКЛАДКИ АНАЛИТИКА
+// ============================================
 function renderAnalytics() {
   const c = document.getElementById('analytics-content');
   const allPlayers = getAllPlayersFromHistory();
-  const totalMatches = state.matchHistory.length;
+  const filteredMatches = getMatchesByPeriod(currentPeriod);
+  const totalMatches = filteredMatches.length;
   
   let h = `
     <div class="analytics-header">
       <h2>📈 Аналитика сезона</h2>
-      <div class="subtitle">Всего матчей: ${totalMatches} • Игроков: ${allPlayers.length}</div>
+      <div class="subtitle">Всего матчей в истории: ${state.matchHistory.length} • Игроков: ${allPlayers.length}</div>
     </div>
   `;
   
-  if (totalMatches === 0) {
+  if (state.matchHistory.length === 0) {
     h += `<div class="empty-msg">
       Нет сыгранных матчей.<br>
-      Завершите хотя бы один матч, чтобы увидеть графики и экспортировать статистику.
+      Завершите хотя бы один матч, чтобы увидеть графики.
     </div>`;
     c.innerHTML = h;
     return;
   }
   
-  // ===== БЛОК 1: ГРАФИКИ =====
+  // Селектор периода
+  h += `
+    <div class="period-selector">
+      <div class="period-selector-label">📅 Период анализа</div>
+      <div class="period-buttons">
+        <button class="period-btn ${currentPeriod === 'all' ? 'active' : ''}" onclick="setPeriod('all')">Всё время</button>
+        <button class="period-btn ${currentPeriod === 'month' ? 'active' : ''}" onclick="setPeriod('month')">Месяц</button>
+        <button class="period-btn ${currentPeriod === '3months' ? 'active' : ''}" onclick="setPeriod('3months')">3 месяца</button>
+        <button class="period-btn ${currentPeriod === 'year' ? 'active' : ''}" onclick="setPeriod('year')">Год</button>
+      </div>
+      <div style="font-size: 0.8rem; color: var(--text-dim); margin-top: 5px;">
+        В выбранном периоде: <strong style="color: var(--accent);">${totalMatches} матч(ей)</strong>
+      </div>
+    </div>
+  `;
+  
+  if (totalMatches === 0) {
+    h += `<div class="empty-msg">
+      В выбранном периоде нет матчей.<br>
+      Попробуйте выбрать другой период.
+    </div>`;
+    c.innerHTML = h;
+    return;
+  }
+  
+  // ===== ГРАФИК 1: ПРОГРЕСС ИГРОКА =====
   h += `
     <div class="analytics-section">
       <h3><span class="icon">📊</span> Прогресс игрока</h3>
@@ -1326,9 +1409,12 @@ function renderAnalytics() {
       </div>
       <div id="player-chart-stats" class="chart-stats"></div>
     </div>
-    
+  `;
+  
+  // ===== ГРАФИК 2: СРАВНЕНИЕ ИГРОКОВ (несколько линий) =====
+  h += `
     <div class="analytics-section">
-      <h3><span class="icon">🏆</span> Сравнение игроков за сезон</h3>
+      <h3><span class="icon">🏆</span> Сравнение игроков (до 5)</h3>
       <div class="chart-controls">
         <select id="compare-metric-select" onchange="updateCompareChart()">
           <option value="points">⭐ Очки</option>
@@ -1338,26 +1424,38 @@ function renderAnalytics() {
           <option value="kr">🏆 Коэф. результативности</option>
         </select>
       </div>
+      <div class="players-checkboxes" id="compare-players-checkboxes">
+        ${allPlayers.map((p, idx) => `
+          <label class="player-checkbox ${selectedComparePlayers.includes(p.key) ? 'checked' : ''}" data-player="${p.key}">
+            <input type="checkbox" ${selectedComparePlayers.includes(p.key) ? 'checked' : ''} onchange="toggleComparePlayer('${p.key}')">
+            <span class="color-dot" style="background: ${CHART_COLORS[idx % CHART_COLORS.length]}"></span>
+            <span>#${p.number||'—'} ${esc(p.name)}</span>
+          </label>
+        `).join('')}
+      </div>
       <div class="chart-container">
         <canvas id="players-compare-chart"></canvas>
       </div>
     </div>
-    
+  `;
+  
+  // ===== ГРАФИК 3: ВСЕ МЕТРИКИ ОДНОГО ИГРОКА =====
+  h += `
     <div class="analytics-section">
-      <h3><span class="icon">🥧</span> Распределение очков в команде</h3>
+      <h3><span class="icon">🎯</span> Все метрики игрока</h3>
       <div class="chart-controls">
-        <select id="team-dist-select" onchange="updateDistributionChart()">
-          <option value="all">Все матчи</option>
-          ${state.matchHistory.map((m, i) => `<option value="${i}">Матч ${i+1} (${m.date})</option>`).join('')}
+        <select id="metrics-player-select" onchange="updateMetricsChart()">
+          <option value="">Выберите игрока...</option>
+          ${allPlayers.map(p => `<option value="${p.key}">#${p.number||'—'} ${esc(p.name)}</option>`).join('')}
         </select>
       </div>
       <div class="chart-container">
-        <canvas id="team-distribution-chart"></canvas>
+        <canvas id="player-metrics-chart"></canvas>
       </div>
     </div>
   `;
   
-  // ===== БЛОК 2: ЭКСПОРТ =====
+  // ===== БЛОК ЭКСПОРТА =====
   h += `
     <div class="analytics-section">
       <h3><span class="icon">📥</span> Экспорт статистики</h3>
@@ -1384,56 +1482,131 @@ function renderAnalytics() {
   
   c.innerHTML = h;
   
-  // Инициализация графиков после рендеринга
   setTimeout(() => {
     initCharts();
   }, 100);
 }
 
-// Инициализация графиков
+// Установка периода
+function setPeriod(period) {
+  currentPeriod = period;
+  renderAnalytics();
+}
+
+// Переключение игрока в сравнении
+function toggleComparePlayer(playerKey) {
+  const idx = selectedComparePlayers.indexOf(playerKey);
+  if (idx > -1) {
+    selectedComparePlayers.splice(idx, 1);
+  } else {
+    if (selectedComparePlayers.length >= 5) {
+      toast('Можно выбрать максимум 5 игроков');
+      // Сбрасываем чекбокс
+      renderAnalytics();
+      return;
+    }
+    selectedComparePlayers.push(playerKey);
+  }
+  // Обновляем только визуальный стиль чекбоксов
+  document.querySelectorAll('.player-checkbox').forEach(el => {
+    const key = el.dataset.player;
+    if (selectedComparePlayers.includes(key)) {
+      el.classList.add('checked');
+      el.querySelector('input').checked = true;
+    } else {
+      el.classList.remove('checked');
+      el.querySelector('input').checked = false;
+    }
+  });
+  updateCompareChart();
+}
+
 function initCharts() {
-  // Настраиваем глобальные настройки Chart.js для тёмной темы
   Chart.defaults.color = '#8899aa';
   Chart.defaults.borderColor = '#2a3a4a';
   Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
   
-  // Автоматически выбираем первого игрока
   const playerSelect = document.getElementById('chart-player-select');
   if (playerSelect && playerSelect.options.length > 1) {
     playerSelect.selectedIndex = 1;
-    updatePlayerChart();
   }
   
+  const metricsSelect = document.getElementById('metrics-player-select');
+  if (metricsSelect && metricsSelect.options.length > 1) {
+    metricsSelect.selectedIndex = 1;
+  }
+  
+  // Автовыбор топ-3 игроков для сравнения
+  if (selectedComparePlayers.length === 0) {
+    const allPlayers = getAllPlayersFromHistory();
+    const filteredMatches = getMatchesByPeriod(currentPeriod);
+    
+    // Подсчитываем очки каждого игрока за период
+    const playerPoints = new Map();
+    filteredMatches.forEach(match => {
+      ['yellow', 'blue'].forEach(team => {
+        match.teams[team].players.forEach(p => {
+          const key = p.rosterId || p.name;
+          playerPoints.set(key, (playerPoints.get(key) || 0) + (p.stats.points || 0));
+        });
+      });
+    });
+    
+    // Сортируем и берём топ-3
+    const sorted = Array.from(playerPoints.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3)
+      .map(([key]) => key);
+    
+    selectedComparePlayers = sorted;
+    // Обновляем визуальные чекбоксы
+    document.querySelectorAll('.player-checkbox').forEach(el => {
+      const key = el.dataset.player;
+      if (selectedComparePlayers.includes(key)) {
+        el.classList.add('checked');
+        el.querySelector('input').checked = true;
+      }
+    });
+  }
+  
+  updatePlayerChart();
   updateCompareChart();
-  updateDistributionChart();
+  updateMetricsChart();
 }
 
-// Обновление графика прогресса игрока
+// ГРАФИК 1: Прогресс одного игрока
 function updatePlayerChart() {
   const playerKey = document.getElementById('chart-player-select').value;
   const metric = document.getElementById('chart-metric-select').value;
+  
+  const statsContainer = document.getElementById('player-chart-stats');
   
   if (!playerKey) {
     if (chartInstances.playerProgress) {
       chartInstances.playerProgress.destroy();
       chartInstances.playerProgress = null;
     }
-    document.getElementById('player-chart-stats').innerHTML = '';
+    if (statsContainer) statsContainer.innerHTML = '';
     return;
   }
   
-  const data = getPlayerSeasonData(playerKey);
-  if (data.length === 0) return;
+  const data = getPlayerPeriodData(playerKey, currentPeriod);
+  if (data.length === 0) {
+    if (statsContainer) statsContainer.innerHTML = '<div class="empty-msg">Нет данных за выбранный период</div>';
+    return;
+  }
   
-  const labels = data.map(d => `М${d.matchIdx}`);
+  const labels = data.map(d => {
+    const date = new Date(d.date);
+    return `${date.getDate()}.${String(date.getMonth()+1).padStart(2,'0')}`;
+  });
   const values = data.map(d => d[metric]);
   
   // Статистика
   const total = values.reduce((a, b) => a + b, 0);
   const avg = total / values.length;
   const max = Math.max(...values);
-  const min = Math.min(...values);
-  const trend = values.length >= 2 ? values[values.length - 1] - values[values.length - 2] : 0;
+  const trend = values.length >= 2 ? values[values.length - 1] - values[0] : 0;
   const trendClass = trend > 0 ? 'trend-up' : (trend < 0 ? 'trend-down' : '');
   const trendSymbol = trend > 0 ? '↗' : (trend < 0 ? '↘' : '→');
   
@@ -1441,33 +1614,32 @@ function updatePlayerChart() {
     points: 'Очки', aces: 'Эйсы', blocks: 'Блоки', attacks: 'Атаки', kr: 'КР'
   };
   
-  document.getElementById('player-chart-stats').innerHTML = `
-    <div class="chart-stat-card">
-      <div class="value">${total}</div>
-      <div class="label">Всего ${metricLabels[metric]}</div>
-    </div>
-    <div class="chart-stat-card">
-      <div class="value">${avg.toFixed(1)}</div>
-      <div class="label">Среднее за матч</div>
-    </div>
-    <div class="chart-stat-card">
-      <div class="value">${max}</div>
-      <div class="label">Лучший матч</div>
-    </div>
-    <div class="chart-stat-card ${trendClass}">
-      <div class="value">${trendSymbol} ${Math.abs(trend)}</div>
-      <div class="label">Тренд</div>
-    </div>
-  `;
+  if (statsContainer) {
+    statsContainer.innerHTML = `
+      <div class="chart-stat-card">
+        <div class="value">${total}</div>
+        <div class="label">Всего ${metricLabels[metric]}</div>
+      </div>
+      <div class="chart-stat-card">
+        <div class="value">${avg.toFixed(1)}</div>
+        <div class="label">Среднее за матч</div>
+      </div>
+      <div class="chart-stat-card">
+        <div class="value">${max}</div>
+        <div class="label">Лучший матч</div>
+      </div>
+      <div class="chart-stat-card ${trendClass}">
+        <div class="value">${trendSymbol} ${Math.abs(trend)}</div>
+        <div class="label">Прогресс за период</div>
+      </div>
+    `;
+  }
   
   const ctx = document.getElementById('player-progress-chart').getContext('2d');
   
-  if (chartInstances.playerProgress) {
-    chartInstances.playerProgress.destroy();
-  }
+  if (chartInstances.playerProgress) chartInstances.playerProgress.destroy();
   
-  // Градиент для заполнения
-  const gradient = ctx.createLinearGradient(0, 0, 0, 280);
+  const gradient = ctx.createLinearGradient(0, 0, 0, 300);
   gradient.addColorStop(0, 'rgba(0, 212, 170, 0.4)');
   gradient.addColorStop(1, 'rgba(0, 212, 170, 0)');
   
@@ -1482,12 +1654,12 @@ function updatePlayerChart() {
         backgroundColor: gradient,
         borderWidth: 3,
         fill: true,
-        tension: 0.3,
+        tension: 0.4,
         pointBackgroundColor: '#00d4aa',
         pointBorderColor: '#0f1923',
         pointBorderWidth: 2,
         pointRadius: 5,
-        pointHoverRadius: 7
+        pointHoverRadius: 8
       }]
     },
     options: {
@@ -1526,17 +1698,57 @@ function updatePlayerChart() {
   });
 }
 
-// Обновление графика сравнения игроков
+// ГРАФИК 2: Сравнение нескольких игроков (несколько линий)
 function updateCompareChart() {
   const metric = document.getElementById('compare-metric-select').value;
-  const playersStats = getSeasonPlayersStats();
   
-  // Сортируем по убыванию и берём топ-10
-  playersStats.sort((a, b) => b[metric] - a[metric]);
-  const topPlayers = playersStats.slice(0, 10);
+  if (selectedComparePlayers.length === 0) {
+    if (chartInstances.playersCompare) {
+      chartInstances.playersCompare.destroy();
+      chartInstances.playersCompare = null;
+    }
+    return;
+  }
   
-  const labels = topPlayers.map(p => `#${p.number||'—'} ${p.name}`);
-  const values = topPlayers.map(p => p[metric]);
+  // Собираем данные всех выбранных игроков
+  const allPlayers = getAllPlayersFromHistory();
+  const playerInfoMap = new Map();
+  allPlayers.forEach(p => playerInfoMap.set(p.key, p));
+  
+  // Определяем все даты матчей в периоде
+  const filteredMatches = getMatchesByPeriod(currentPeriod);
+  const labels = filteredMatches.map((m, i) => {
+    const date = new Date(m.date);
+    return `${date.getDate()}.${String(date.getMonth()+1).padStart(2,'0')}`;
+  });
+  
+  const datasets = selectedComparePlayers.map((playerKey, idx) => {
+    const data = getPlayerPeriodData(playerKey, currentPeriod);
+    const info = playerInfoMap.get(playerKey);
+    const label = info ? `#${info.number||'—'} ${info.name}` : playerKey;
+    
+    // Выстраиваем значения по всем матчам (если игрок не играл в матче — null)
+    const values = filteredMatches.map((match, matchIdx) => {
+      const playerData = data.find(d => d.date === match.date && d.time === match.time);
+      return playerData ? playerData[metric] : null;
+    });
+    
+    return {
+      label: label,
+      data: values,
+      borderColor: CHART_COLORS[idx % CHART_COLORS.length],
+      backgroundColor: CHART_COLORS[idx % CHART_COLORS.length] + '30',
+      borderWidth: 3,
+      fill: false,
+      tension: 0.4,
+      pointBackgroundColor: CHART_COLORS[idx % CHART_COLORS.length],
+      pointBorderColor: '#0f1923',
+      pointBorderWidth: 2,
+      pointRadius: 4,
+      pointHoverRadius: 7,
+      spanGaps: false
+    };
+  });
   
   const metricLabels = {
     points: 'Очки', aces: 'Эйсы', blocks: 'Блоки', attacks: 'Атаки', kr: 'КР'
@@ -1544,126 +1756,24 @@ function updateCompareChart() {
   
   const ctx = document.getElementById('players-compare-chart').getContext('2d');
   
-  if (chartInstances.playersCompare) {
-    chartInstances.playersCompare.destroy();
-  }
-  
-  // Градиент для столбцов
-  const gradient = ctx.createLinearGradient(0, 0, 0, 280);
-  gradient.addColorStop(0, '#f5c518');
-  gradient.addColorStop(1, '#d4a800');
+  if (chartInstances.playersCompare) chartInstances.playersCompare.destroy();
   
   chartInstances.playersCompare = new Chart(ctx, {
-    type: 'bar',
+    type: 'line',
     data: {
       labels: labels,
-      datasets: [{
-        label: metricLabels[metric],
-        data: values,
-        backgroundColor: gradient,
-        borderColor: '#f5c518',
-        borderWidth: 1,
-        borderRadius: 6
-      }]
+      datasets: datasets
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      indexAxis: 'y',
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: '#1a2733',
-          titleColor: '#e8e8e8',
-          bodyColor: '#f5c518',
-          borderColor: '#3a4a5a',
-          borderWidth: 1,
-          callbacks: {
-            label: (item) => `${metricLabels[metric]}: ${item.raw} (в ${topPlayers[item.dataIndex].matches} матчах)`
-          }
-        }
+      interaction: {
+        mode: 'index',
+        intersect: false
       },
-      scales: {
-        x: {
-          beginAtZero: true,
-          grid: { color: 'rgba(42, 58, 74, 0.5)' },
-          ticks: { color: '#8899aa' }
-        },
-        y: {
-          grid: { display: false },
-          ticks: { color: '#8899aa', font: { size: 11 } }
-        }
-      }
-    }
-  });
-}
-
-// Обновление круговой диаграммы распределения очков
-function updateDistributionChart() {
-  const matchIdx = document.getElementById('team-dist-select').value;
-  
-  let playersList = [];
-  
-  if (matchIdx === 'all') {
-    // Все матчи
-    playersList = getSeasonPlayersStats();
-  } else {
-    // Конкретный матч
-    const match = state.matchHistory[parseInt(matchIdx)];
-    playersList = [];
-    ['yellow', 'blue'].forEach(team => {
-      match.teams[team].players.forEach(p => {
-        playersList.push({
-          name: p.name,
-          number: p.number,
-          points: p.stats.points || 0,
-          team: team
-        });
-      });
-    });
-  }
-  
-  // Фильтруем тех, у кого есть очки
-  playersList = playersList.filter(p => p.points > 0);
-  playersList.sort((a, b) => b.points - a.points);
-  
-  // Берём топ-8, остальных объединяем в "Другие"
-  let chartData = playersList.slice(0, 8);
-  if (playersList.length > 8) {
-    const othersPoints = playersList.slice(8).reduce((s, p) => s + p.points, 0);
-    chartData.push({ name: 'Другие', number: '', points: othersPoints, team: 'other' });
-  }
-  
-  const labels = chartData.map(p => `#${p.number||'—'} ${p.name}`);
-  const values = chartData.map(p => p.points);
-  const colors = [
-    '#f5c518', '#2980b9', '#00d4aa', '#e74c3c', '#9b59b6', 
-    '#f39c12', '#1abc9c', '#34495e', '#8899aa'
-  ];
-  
-  const ctx = document.getElementById('team-distribution-chart').getContext('2d');
-  
-  if (chartInstances.teamDistribution) {
-    chartInstances.teamDistribution.destroy();
-  }
-  
-  chartInstances.teamDistribution = new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: labels,
-      datasets: [{
-        data: values,
-        backgroundColor: colors,
-        borderColor: '#0f1923',
-        borderWidth: 2
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
       plugins: {
         legend: {
-          position: 'right',
+          position: 'top',
           labels: {
             color: '#e8e8e8',
             padding: 10,
@@ -1678,12 +1788,132 @@ function updateDistributionChart() {
           borderColor: '#3a4a5a',
           borderWidth: 1,
           callbacks: {
-            label: (item) => {
-              const total = values.reduce((a, b) => a + b, 0);
-              const pct = ((item.raw / total) * 100).toFixed(1);
-              return `${item.raw} очков (${pct}%)`;
+            title: (items) => {
+              if (items.length > 0) {
+                const matchIdx = items[0].dataIndex;
+                const match = filteredMatches[matchIdx];
+                return match ? `${match.date} • Матч ${matchIdx + 1}` : '';
+              }
+              return '';
+            },
+            label: (item) => `${item.dataset.label}: ${item.raw !== null ? item.raw : '—'}`
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          grid: { color: 'rgba(42, 58, 74, 0.5)' },
+          ticks: { color: '#8899aa' },
+          title: {
+            display: true,
+            text: metricLabels[metric],
+            color: '#8899aa'
+          }
+        },
+        x: {
+          grid: { display: false },
+          ticks: { color: '#8899aa', maxRotation: 45 }
+        }
+      }
+    }
+  });
+}
+
+// ГРАФИК 3: Все метрики одного игрока
+function updateMetricsChart() {
+  const playerKey = document.getElementById('metrics-player-select').value;
+  
+  if (!playerKey) {
+    if (chartInstances.playerMetrics) {
+      chartInstances.playerMetrics.destroy();
+      chartInstances.playerMetrics = null;
+    }
+    return;
+  }
+  
+  const data = getPlayerPeriodData(playerKey, currentPeriod);
+  if (data.length === 0) return;
+  
+  const labels = data.map(d => {
+    const date = new Date(d.date);
+    return `${date.getDate()}.${String(date.getMonth()+1).padStart(2,'0')}`;
+  });
+  
+  // Метрики для отображения (только позитивные, чтобы не было путаницы)
+  const metricsToShow = [
+    { key: 'points', label: '⭐ Очки', color: '#00d4aa' },
+    { key: 'attacks', label: '💥 Атаки', color: '#f5c518' },
+    { key: 'aces', label: '🎯 Эйсы', color: '#2980b9' },
+    { key: 'blocks', label: '🧱 Блоки', color: '#e74c3c' },
+    { key: 'kr', label: '🏆 КР', color: '#9b59b6' }
+  ];
+  
+  const datasets = metricsToShow.map(m => ({
+    label: m.label,
+    data: data.map(d => d[m.key]),
+    borderColor: m.color,
+    backgroundColor: m.color + '20',
+    borderWidth: 2,
+    fill: false,
+    tension: 0.4,
+    pointRadius: 3,
+    pointHoverRadius: 6,
+    pointBackgroundColor: m.color,
+    pointBorderColor: '#0f1923',
+    pointBorderWidth: 2
+  }));
+  
+  const ctx = document.getElementById('player-metrics-chart').getContext('2d');
+  
+  if (chartInstances.playerMetrics) chartInstances.playerMetrics.destroy();
+  
+  chartInstances.playerMetrics = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: datasets
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: {
+        mode: 'index',
+        intersect: false
+      },
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: {
+            color: '#e8e8e8',
+            padding: 8,
+            font: { size: 11 },
+            boxWidth: 12
+          }
+        },
+        tooltip: {
+          backgroundColor: '#1a2733',
+          titleColor: '#e8e8e8',
+          bodyColor: '#00d4aa',
+          borderColor: '#3a4a5a',
+          borderWidth: 1,
+          callbacks: {
+            title: (items) => {
+              const idx = items[0].dataIndex;
+              return `${data[idx].date} • ${data[idx].time}`;
             }
           }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          grid: { color: 'rgba(42, 58, 74, 0.5)' },
+          ticks: { color: '#8899aa' }
+        },
+        x: {
+          grid: { display: false },
+          ticks: { color: '#8899aa', maxRotation: 45 }
         }
       }
     }
@@ -1691,18 +1921,48 @@ function updateDistributionChart() {
 }
 
 // ============================================
-// ЭКСПОРТ В EXCEL
+// ЭКСПОРТ
 // ============================================
+function getSeasonPlayersStats() {
+  const playersMap = new Map();
+  
+  state.matchHistory.forEach(match => {
+    ['yellow', 'blue'].forEach(team => {
+      match.teams[team].players.forEach(p => {
+        const key = p.rosterId || p.name;
+        if (!playersMap.has(key)) {
+          playersMap.set(key, {
+            key: key, name: p.name, number: p.number,
+            matches: 0, points: 0, aces: 0, blocks: 0, attacks: 0,
+            outs: 0, serviceErrors: 0, receptions: 0, assists: 0, kr: 0
+          });
+        }
+        const stats = playersMap.get(key);
+        stats.matches++;
+        stats.points += p.stats.points || 0;
+        stats.aces += p.stats.aces || 0;
+        stats.blocks += p.stats.blocks || 0;
+        stats.attacks += p.stats.attacks || 0;
+        stats.outs += p.stats.outs || 0;
+        stats.serviceErrors += p.stats.serviceErrors || 0;
+        stats.receptions += p.stats.receptions || 0;
+        stats.assists += p.stats.assists || 0;
+        stats.kr += (p.stats.points||0) + (p.stats.aces||0) + (p.stats.blocks||0) + 
+                    (p.stats.attacks||0) + (p.stats.assists||0) + (p.stats.receptions||0) - 
+                    (p.stats.outs||0) - (p.stats.serviceErrors||0);
+      });
+    });
+  });
+  
+  return Array.from(playersMap.values());
+}
+
 function exportToExcel() {
-  if (state.matchHistory.length === 0) {
-    toast('Нет матчей для экспорта');
-    return;
-  }
+  if (state.matchHistory.length === 0) { toast('Нет матчей для экспорта'); return; }
   
   try {
     const wb = XLSX.utils.book_new();
     
-    // Лист 1: Статистика игроков за сезон
     const playersStats = getSeasonPlayersStats();
     const playersData = [
       ['Игрок', '№', 'Матчей', 'Очки', 'Эйсы', 'Блоки', 'Атаки', 'Приём', 'Передачи', 'Ауты', 'Ошибки', 'КР']
@@ -1722,10 +1982,7 @@ function exportToExcel() {
     ];
     XLSX.utils.book_append_sheet(wb, ws1, 'Игроки за сезон');
     
-    // Лист 2: История матчей
-    const matchesData = [
-      ['№', 'Дата', 'Время', 'Счёт Жёлтая', 'Счёт Синяя', 'MVP', 'Сеты']
-    ];
+    const matchesData = [['№', 'Дата', 'Время', 'Счёт Жёлтая', 'Счёт Синяя', 'MVP', 'Сеты']];
     state.matchHistory.forEach((m, i) => {
       const setsStr = m.sets.map((s, j) => `Сет${j+1}: ${s.y}-${s.b}`).join('; ');
       matchesData.push([
@@ -1739,7 +1996,6 @@ function exportToExcel() {
     ws2['!cols'] = [{wch: 5}, {wch: 12}, {wch: 8}, {wch: 12}, {wch: 12}, {wch: 25}, {wch: 40}];
     XLSX.utils.book_append_sheet(wb, ws2, 'История матчей');
     
-    // Лист 3: Детальная статистика по матчам
     const detailedData = [['Матч', 'Дата', 'Команда', 'Игрок', '№', 'Очки', 'Эйсы', 'Блоки', 'Атаки', 'Приём', 'Передачи', 'Ауты', 'Ошибки', 'КР']];
     state.matchHistory.forEach((m, matchIdx) => {
       ['yellow', 'blue'].forEach(team => {
@@ -1753,8 +2009,7 @@ function exportToExcel() {
             p.name, p.number || '',
             p.stats.points || 0, p.stats.aces || 0, p.stats.blocks || 0,
             p.stats.attacks || 0, p.stats.receptions || 0, p.stats.assists || 0,
-            p.stats.outs || 0, p.stats.serviceErrors || 0,
-            kr
+            p.stats.outs || 0, p.stats.serviceErrors || 0, kr
           ]);
         });
       });
@@ -1767,7 +2022,6 @@ function exportToExcel() {
     ];
     XLSX.utils.book_append_sheet(wb, ws3, 'Детально по матчам');
     
-    // Сохраняем файл
     const dateStr = new Date().toISOString().split('T')[0];
     XLSX.writeFile(wb, `volleyball-stats-${dateStr}.xlsx`);
     toast('Excel-файл сохранён!');
@@ -1777,22 +2031,14 @@ function exportToExcel() {
   }
 }
 
-// ============================================
-// ЭКСПОРТ В CSV
-// ============================================
 function exportToCSV() {
-  if (state.matchHistory.length === 0) {
-    toast('Нет матчей для экспорта');
-    return;
-  }
+  if (state.matchHistory.length === 0) { toast('Нет матчей для экспорта'); return; }
   
   try {
     const playersStats = getSeasonPlayersStats();
     
-    // Заголовок
     let csv = 'Игрок;№;Матчей;Очки;Эйсы;Блоки;Атаки;Приём;Передачи;Ауты;Ошибки;КР\n';
     
-    // Данные
     playersStats.forEach(p => {
       csv += [
         p.name, p.number || '', p.matches,
@@ -1802,7 +2048,6 @@ function exportToCSV() {
       ].join(';') + '\n';
     });
     
-    // Добавляем разделитель и историю матчей
     csv += '\n\nИстория матчей\n';
     csv += '№;Дата;Время;Счёт Жёлтая;Счёт Синяя;MVP\n';
     state.matchHistory.forEach((m, i) => {
@@ -1813,7 +2058,6 @@ function exportToCSV() {
       ].join(';') + '\n';
     });
     
-    // Создаём Blob с BOM для корректного отображения кириллицы в Excel
     const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -2388,9 +2632,11 @@ window.saveImage = saveImage;
 window.shareImage = shareImage;
 window.exportData = exportData;
 window.restoreLastLineup = restoreLastLineup;
+window.setPeriod = setPeriod;
+window.toggleComparePlayer = toggleComparePlayer;
 window.updatePlayerChart = updatePlayerChart;
 window.updateCompareChart = updateCompareChart;
-window.updateDistributionChart = updateDistributionChart;
+window.updateMetricsChart = updateMetricsChart;
 window.exportToExcel = exportToExcel;
 window.exportToCSV = exportToCSV;
 </script>
