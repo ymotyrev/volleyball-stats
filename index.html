@@ -341,7 +341,6 @@
   .chart-stat-card.trend-up .value { color: var(--accent); }
   .chart-stat-card.trend-down .value { color: var(--danger); }
 
-  /* Легенда метрик (под графиком) */
   .metrics-legend {
     display: flex;
     flex-wrap: wrap;
@@ -365,6 +364,93 @@
     width: 14px;
     height: 3px;
     border-radius: 2px;
+  }
+
+  /* ===== ТАБЛИЦА ДЕТАЛЬНОЙ СТАТИСТИКИ ===== */
+  .player-stats-table-wrap {
+    overflow-x: auto;
+    margin-top: 15px;
+    border-radius: 8px;
+    border: 1px solid #2a3a4a;
+  }
+  .player-stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    min-width: 600px;
+  }
+  .player-stats-table thead th {
+    background: #1e2e3e;
+    padding: 10px 8px;
+    text-align: center;
+    color: var(--text-dim);
+    font-weight: 600;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #2a3a4a;
+    position: sticky;
+    top: 0;
+  }
+  .player-stats-table thead th:first-child {
+    text-align: left;
+    padding-left: 12px;
+  }
+  .player-stats-table tbody td {
+    padding: 10px 8px;
+    text-align: center;
+    border-bottom: 1px solid #1e2e3e;
+    color: var(--text);
+  }
+  .player-stats-table tbody td:first-child {
+    text-align: left;
+    padding-left: 12px;
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+  .player-stats-table tbody tr:hover {
+    background: rgba(255,255,255,0.03);
+  }
+  .player-stats-table .metric-cell {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+  .player-stats-table .metric-cell.points { color: #2980b9; }
+  .player-stats-table .metric-cell.attacks { color: #f5c518; }
+  .player-stats-table .metric-cell.aces { color: #e74c3c; }
+  .player-stats-table .metric-cell.blocks { color: #27ae60; }
+  .player-stats-table .metric-cell.kr { color: #9b59b6; }
+  .player-stats-table tr.total-row {
+    background: rgba(0, 212, 170, 0.08);
+    border-top: 2px solid var(--accent);
+  }
+  .player-stats-table tr.total-row td {
+    font-weight: 800;
+    font-size: 0.95rem;
+    padding: 12px 8px;
+  }
+  .player-stats-table tr.total-row td:first-child {
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .player-stats-table tr.avg-row {
+    background: rgba(255,255,255,0.02);
+  }
+  .player-stats-table tr.avg-row td {
+    color: var(--text-dim);
+    font-style: italic;
+    font-size: 0.8rem;
+  }
+  .player-stats-table .best-cell {
+    position: relative;
+  }
+  .player-stats-table .best-cell::after {
+    content: '🏆';
+    font-size: 0.7rem;
+    margin-left: 3px;
+    vertical-align: super;
   }
 
   /* ===== ЭКСПОРТ ===== */
@@ -690,15 +776,12 @@ let isSyncing = false;
 let currentPeriod = 'all';
 let chartInstance = null;
 
-// ============================================
-// ЦВЕТА МЕТРИК (для графика и легенды)
-// ============================================
 const METRIC_COLORS = {
-  points:        { color: '#2980b9', label: '⭐ Очки' },
-  attacks:       { color: '#f5c518', label: '💥 Атаки' },
-  aces:          { color: '#e74c3c', label: '🎯 Эйсы' },
-  blocks:        { color: '#27ae60', label: '🧱 Блоки' },
-  kr:            { color: '#9b59b6', label: '🏆 КР' }
+  points:  { color: '#2980b9', label: '⭐ Очки' },
+  attacks: { color: '#f5c518', label: '💥 Атаки' },
+  aces:    { color: '#e74c3c', label: '🎯 Эйсы' },
+  blocks:  { color: '#27ae60', label: '🧱 Блоки' },
+  kr:      { color: '#9b59b6', label: '🏆 КР' }
 };
 
 const STAT_DEFS = [
@@ -1142,7 +1225,7 @@ function renderCompare() {
 }
 
 // ============================================
-// АНАЛИТИКА: ПОКАЗАТЕЛИ ИГРОКА ЗА ПЕРИОД
+// АНАЛИТИКА
 // ============================================
 
 function getMatchesByPeriod(period) {
@@ -1222,7 +1305,6 @@ function renderAnalytics() {
     return;
   }
   
-  // Селектор периода
   h += `
     <div class="period-selector">
       <div class="period-selector-label">📅 Период анализа</div>
@@ -1242,7 +1324,6 @@ function renderAnalytics() {
     return;
   }
   
-  // ===== ГЛАВНЫЙ ГРАФИК: ВСЕ МЕТРИКИ ИГРОКА =====
   h += `
     <div class="analytics-section">
       <h3><span class="icon">🎯</span> Показатели игрока за период</h3>
@@ -1260,7 +1341,16 @@ function renderAnalytics() {
     </div>
   `;
   
-  // ===== БЛОК ЭКСПОРТА =====
+  // ===== НОВАЯ СЕКЦИЯ: ДЕТАЛЬНАЯ СТАТИСТИКА В ТАБЛИЦЕ =====
+  h += `
+    <div class="analytics-section">
+      <h3><span class="icon">📋</span> Детальная статистика за период</h3>
+      <div id="player-stats-table-container">
+        <div class="empty-msg">Выберите игрока в графике выше, чтобы увидеть детальную статистику.</div>
+      </div>
+    </div>
+  `;
+  
   h += `
     <div class="analytics-section">
       <h3><span class="icon">📥</span> Экспорт статистики</h3>
@@ -1302,10 +1392,8 @@ function initAnalyticsChart() {
   Chart.defaults.borderColor = '#2a3a4a';
   Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
   
-  // Отрисовываем легенду метрик (постоянная, не зависит от игрока)
   renderMetricsLegend();
   
-  // Автовыбор первого игрока
   const playerSelect = document.getElementById('analytics-player-select');
   if (playerSelect && playerSelect.options.length > 1) {
     playerSelect.selectedIndex = 1;
@@ -1313,7 +1401,6 @@ function initAnalyticsChart() {
   }
 }
 
-// Отрисовка цветной легенды метрик
 function renderMetricsLegend() {
   const legendContainer = document.getElementById('metrics-legend');
   if (!legendContainer) return;
@@ -1326,7 +1413,6 @@ function renderMetricsLegend() {
   ).join('');
 }
 
-// ГЛАВНЫЙ ГРАФИК: все метрики одного игрока на одном графике
 function updatePlayerMetricsChart() {
   const playerKey = document.getElementById('analytics-player-select').value;
   const statsContainer = document.getElementById('player-metrics-stats');
@@ -1334,6 +1420,9 @@ function updatePlayerMetricsChart() {
   if (!playerKey) {
     if (chartInstance) { chartInstance.destroy(); chartInstance = null; }
     if (statsContainer) statsContainer.innerHTML = '';
+    // Очищаем таблицу тоже
+    const tableContainer = document.getElementById('player-stats-table-container');
+    if (tableContainer) tableContainer.innerHTML = '<div class="empty-msg">Выберите игрока в графике выше, чтобы увидеть детальную статистику.</div>';
     return;
   }
   
@@ -1348,7 +1437,6 @@ function updatePlayerMetricsChart() {
     return `${date.getDate()}.${String(date.getMonth()+1).padStart(2,'0')}`;
   });
   
-  // Создаём 5 линий (datasets) для каждой метрики
   const datasets = Object.entries(METRIC_COLORS).map(([key, metric]) => ({
     label: metric.label,
     data: data.map(d => d[key]),
@@ -1364,7 +1452,6 @@ function updatePlayerMetricsChart() {
     pointHoverRadius: 8
   }));
   
-  // Статистика: суммы и тренды по каждой метрике
   const statsHtml = Object.entries(METRIC_COLORS).map(([key, metric]) => {
     const values = data.map(d => d[key]);
     const total = values.reduce((a, b) => a + b, 0);
@@ -1395,10 +1482,7 @@ function updatePlayerMetricsChart() {
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      interaction: {
-        mode: 'index',
-        intersect: false
-      },
+      interaction: { mode: 'index', intersect: false },
       plugins: {
         legend: {
           display: true,
@@ -1431,25 +1515,116 @@ function updatePlayerMetricsChart() {
               }
               return '';
             },
-            label: (item) => {
-              return `  ${item.dataset.label}: ${item.raw}`;
-            }
+            label: (item) => `  ${item.dataset.label}: ${item.raw}`
           }
         }
       },
       scales: {
-        y: {
-          beginAtZero: true,
-          grid: { color: 'rgba(42, 58, 74, 0.5)' },
-          ticks: { color: '#8899aa' }
-        },
-        x: {
-          grid: { display: false },
-          ticks: { color: '#8899aa', maxRotation: 45 }
-        }
+        y: { beginAtZero: true, grid: { color: 'rgba(42, 58, 74, 0.5)' }, ticks: { color: '#8899aa' } },
+        x: { grid: { display: false }, ticks: { color: '#8899aa', maxRotation: 45 } }
       }
     }
   });
+  
+  // ===== ОТРИСОВКА ТАБЛИЦЫ ДЕТАЛЬНОЙ СТАТИСТИКИ =====
+  renderPlayerStatsTable(playerKey, data);
+}
+
+// ============================================
+// ТАБЛИЦА ДЕТАЛЬНОЙ СТАТИСТИКИ ИГРОКА
+// ============================================
+function renderPlayerStatsTable(playerKey, data) {
+  const container = document.getElementById('player-stats-table-container');
+  if (!container) return;
+  
+  if (!data || data.length === 0) {
+    container.innerHTML = '<div class="empty-msg">Нет данных за выбранный период</div>';
+    return;
+  }
+  
+  // Подсчёт итогов и максимумов
+  const totals = { points: 0, attacks: 0, aces: 0, blocks: 0, kr: 0 };
+  const maxes = { points: 0, attacks: 0, aces: 0, blocks: 0, kr: 0 };
+  
+  data.forEach(d => {
+    totals.points += d.points;
+    totals.attacks += d.attacks;
+    totals.aces += d.aces;
+    totals.blocks += d.blocks;
+    totals.kr += d.kr;
+    
+    if (d.points > maxes.points) maxes.points = d.points;
+    if (d.attacks > maxes.attacks) maxes.attacks = d.attacks;
+    if (d.aces > maxes.aces) maxes.aces = d.aces;
+    if (d.blocks > maxes.blocks) maxes.blocks = d.blocks;
+    if (d.kr > maxes.kr) maxes.kr = d.kr;
+  });
+  
+  const avg = {
+    points: (totals.points / data.length).toFixed(1),
+    attacks: (totals.attacks / data.length).toFixed(1),
+    aces: (totals.aces / data.length).toFixed(1),
+    blocks: (totals.blocks / data.length).toFixed(1),
+    kr: (totals.kr / data.length).toFixed(1)
+  };
+  
+  let html = `
+    <div class="player-stats-table-wrap">
+      <table class="player-stats-table">
+        <thead>
+          <tr>
+            <th>Дата матча</th>
+            <th>⭐ Очки</th>
+            <th>💥 Атаки</th>
+            <th>🎯 Эйсы</th>
+            <th>🧱 Блоки</th>
+            <th>🏆 КР</th>
+          </tr>
+        </thead>
+        <tbody>
+  `;
+  
+  data.forEach(d => {
+    const date = new Date(d.date);
+    const dateStr = `${date.getDate()}.${String(date.getMonth()+1).padStart(2,'0')}.${date.getFullYear()}`;
+    
+    html += `
+      <tr>
+        <td>${dateStr}<br><span style="font-size:0.7rem;opacity:0.6">${d.time}</span></td>
+        <td class="metric-cell points ${d.points === maxes.points && d.points > 0 ? 'best-cell' : ''}">${d.points}</td>
+        <td class="metric-cell attacks ${d.attacks === maxes.attacks && d.attacks > 0 ? 'best-cell' : ''}">${d.attacks}</td>
+        <td class="metric-cell aces ${d.aces === maxes.aces && d.aces > 0 ? 'best-cell' : ''}">${d.aces}</td>
+        <td class="metric-cell blocks ${d.blocks === maxes.blocks && d.blocks > 0 ? 'best-cell' : ''}">${d.blocks}</td>
+        <td class="metric-cell kr ${d.kr === maxes.kr && d.kr > 0 ? 'best-cell' : ''}">${d.kr}</td>
+      </tr>
+    `;
+  });
+  
+  html += `
+    <tr class="avg-row">
+      <td>Среднее за матч</td>
+      <td>${avg.points}</td>
+      <td>${avg.attacks}</td>
+      <td>${avg.aces}</td>
+      <td>${avg.blocks}</td>
+      <td>${avg.kr}</td>
+    </tr>
+  `;
+  
+  html += `
+    <tr class="total-row">
+      <td>ИТОГО за ${data.length} матч(ов)</td>
+      <td class="metric-cell points">${totals.points}</td>
+      <td class="metric-cell attacks">${totals.attacks}</td>
+      <td class="metric-cell aces">${totals.aces}</td>
+      <td class="metric-cell blocks">${totals.blocks}</td>
+      <td class="metric-cell kr">${Math.round(totals.kr * 10) / 10}</td>
+    </tr>
+  `;
+  
+  html += `</tbody></table></div>`;
+  
+  container.innerHTML = html;
 }
 
 // ============================================
